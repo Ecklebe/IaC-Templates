@@ -1,0 +1,22 @@
+version: '3.4'
+services:
+  ubuntu-ssh:
+    image: "ubuntu-ssh:latest"
+    build:
+      context: "."
+      target: "ubuntu-ssh"
+      args:
+        parent_image: "ubuntu:20.04"
+        user: ubuntu
+        password: "#test-2022"
+    networks:
+      mynet:
+        ipv4_address: 172.16.128.2
+    ports:
+      - "2222:22"
+    privileged: true # Required for /usr/sbin/init
+networks:
+  mynet:
+    ipam:
+      config:
+        - subnet: 172.16.128.0/24
