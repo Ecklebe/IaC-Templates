@@ -5,3 +5,7 @@ The main parts of the tutorial chapter comes from
 
 The change to the original tutorial is that we are not using the digitalocean services at all. So no DNS and private key
 setup, instead we are using the local docker engine.
+
+## Definitions
+
+Droplet > Server
