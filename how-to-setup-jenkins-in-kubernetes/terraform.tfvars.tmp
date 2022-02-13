@@ -1,0 +1,35 @@
+# 1 Backend variables
+domain                 = "localhost"
+kubernetes_config_path = "C:\\Users\\tobia\\.kube\\config"
+
+# 2 Cluster variables
+cluster_name   = "my-special-cluster-name"
+cluster_region = "ams3"
+cluster_tags   = ["foo", "development"]
+node_size      = "s-1vcpu-2gb"
+node_min_count = 2
+node_max_count = 4
+
+# 3 Ingress variables
+ingress_gateway_chart_name    = "traefik"
+ingress_gateway_chart_repo    = "https://helm.traefik.io/traefik"
+ingress_gateway_chart_version = "10.14.0"
+
+# 4 Cert manager variables
+cert_manager_chart_name    = "cert-manager"
+cert_manager_chart_repo    = "https://charts.jetstack.io"
+cert_manager_chart_version = "1.0.4"
+cert_acme_url              = "https://acme-staging-v02.api.letsencrypt.org/directory"
+cert_mail                  = "domain.ecklebe@outlook.de"
+
+# 04 - jenkins variables
+jenkins_chart_repo     = "https://charts.jenkins.io"
+jenkins_chart_name     = "jenkins"
+jenkins_chart_version  = "*"
+jenkins_admin_username = "jenkins"
+
+## This path needs to be created before starting the setup process
+jenkins_persistent_volume_host_path = "/run/desktop/mnt/host/c/kubernetes/jenkins"
+
+# 04 observability platfrom
+grafana_password = "test"
