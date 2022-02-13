@@ -1,7 +1,7 @@
-/temp.txt
 */.terraform/*
 /*/.temp/*
 /*/terraform.tfstate.backup
 /*/terraform.tfstate
 /.temp/*
 /*/.terraform.lock.hcl
+/*/terraform.tfvars
