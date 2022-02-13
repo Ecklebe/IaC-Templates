@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="TerraformToolProjectSettings">
+    <option name="myTerraformPath" value="C:\tools\terraform_1.1.4_windows_amd64\terraform.exe" />
+  </component>
+</project>
