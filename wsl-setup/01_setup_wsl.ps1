@@ -4,6 +4,6 @@ dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux 
 
 dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
 
-# Neustarten
+# computer restart
 
 wsl --set-default-version 2
