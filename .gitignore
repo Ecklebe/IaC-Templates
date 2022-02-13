@@ -1,3 +1,7 @@
-/how-to-structure-a-terraform-project/.terraform/
 /temp.txt
-/how-to-use-terraform-with-digitalocean/.terraform/
+*/.terraform/*
+/*/.temp/*
+/*/terraform.tfstate.backup
+/*/terraform.tfstate
+/.temp/*
+/*/.terraform.lock.hcl
