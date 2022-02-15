@@ -1,3 +1,4 @@
+/*
 # Variable declaration
 variable "cluster_name" {
   type        = string
@@ -24,7 +25,7 @@ variable "node_min_count" {
   description = "Minimum amount of nodes in the cluster."
 }
 
-/*
+
 # Enable auto upgrade patch versions
 data "digitalocean_kubernetes_versions" "do_cluster_version" {
   version_prefix = "1.19."
