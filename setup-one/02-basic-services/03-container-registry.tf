@@ -1,3 +1,17 @@
+/*
+https://faun.pub/install-a-private-docker-container-registry-in-kubernetes-7fb25820fc61
+https://github.com/twuni/docker-registry.helm
+https://www.nearform.com/blog/how-to-run-a-public-docker-registry-in-kubernetes/
+https://www.digitalocean.com/community/tutorials/how-to-set-up-a-private-docker-registry-on-top-of-digitalocean-spaces-and-use-it-with-digitalocean-kubernetes
+
+https://github.com/SeldonIO/k8s-local-docker-registry/blob/master/docker-private-registry.json
+
+
+issue with not accesing docker images
+https://forums.docker.com/t/cant-access-local-images-with-docker-for-windows-in-kubernetes-linux-mode/59573
+
+*/
+
 resource "kubernetes_deployment" "registry" {
   metadata {
     name      = "docker-private-registry"
