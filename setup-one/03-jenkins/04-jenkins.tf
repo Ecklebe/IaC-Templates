@@ -13,7 +13,10 @@ $ jsonpath="{.items[0].status.addresses[0].address}"
 $ NODE_IP=$(kubectl get nodes -n jenkins -o jsonpath=$jsonpath)
 $ echo http://$NODE_IP:$NODE_PORT/login
 
-http://
+https://github.com/jenkinsci/helm-charts/blob/main/charts/jenkins/VALUES_SUMMARY.md#jenkins-plugins
+https://hands-on-tech.github.io/2020/03/15/k8s-jenkins-example.html
+https://github.com/jenkinsci/docker/blob/master/README.md
+
 */
 
 # Variable declaration
