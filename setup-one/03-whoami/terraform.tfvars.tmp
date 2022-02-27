@@ -1,3 +1,2 @@
 # 1 Backend variables
-domain                 = "localhost"
 kubernetes_config_path = "C:\\Users\\tobia\\.kube\\config"
