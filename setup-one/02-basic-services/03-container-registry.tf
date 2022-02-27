@@ -11,11 +11,19 @@ issue with not accesing docker images
 https://forums.docker.com/t/cant-access-local-images-with-docker-for-windows-in-kubernetes-linux-mode/59573
 
 */
+resource "kubernetes_namespace" "registry" {
+  metadata {
+    annotations = {
+      name = "registry"
+    }
+    name = "registry"
+  }
+}
 
 resource "kubernetes_deployment" "registry" {
   metadata {
     name      = "docker-private-registry"
-    namespace = "default"
+    namespace = kubernetes_namespace.registry.metadata[0].name
     labels = {
       "app" = "docker-private-registry"
     }
@@ -59,7 +67,7 @@ resource "kubernetes_deployment" "registry" {
 resource "kubernetes_service" "registry" {
   metadata {
     name      = "docker-private-registry"
-    namespace = "default"
+    namespace = kubernetes_namespace.registry.metadata[0].name
     labels = {
       "service" = "docker-private-registry"
     }
@@ -82,7 +90,7 @@ resource "kubernetes_manifest" "registry-ingress-route-secure" {
     "kind"       = "IngressRoute"
     "metadata" = {
       "name"      = "ingress-route-secure"
-      "namespace" = "default"
+      "namespace" = kubernetes_namespace.registry.metadata[0].name
     }
     "spec" = {
       "entryPoints" = ["websecure", "web"]
