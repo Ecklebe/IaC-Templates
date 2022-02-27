@@ -18,10 +18,10 @@ renderHelmLabels: true
 controller:
   # Used for label app.kubernetes.io/component
   componentName: "jenkins-controller"
-  image: "jenkins/jenkins"
-  # tag: "2.319.2-jdk11"
-  tagLabel: jdk11
-  imagePullPolicy: "Always"
+  image: ${CONTROLLER_IMAGE_NAME}
+  tag: ${CONTROLLER_IMAGE_VERSION}
+  #tagLabel: jdk11
+  imagePullPolicy:
   imagePullSecretName:
   # Optionally configure lifetime for controller-container
   lifecycle:
@@ -234,11 +234,7 @@ controller:
   #   port: 9000
 
   # List of plugins to be install during Jenkins controller start
-  installPlugins:
-    - kubernetes:1.31.3
-    - workflow-aggregator:2.6
-    - git:4.10.2
-    - configuration-as-code:1.55.1
+  installPlugins: false
 
   # Set to false to download the minimum required version of all dependencies.
   installLatestPlugins: true
@@ -258,7 +254,7 @@ controller:
   # overwritePlugins: true
 
   # Configures if plugins bundled with `controller.image` should be overwritten with the values of 'controller.installPlugins' on upgrade or redeployment.
-  overwritePluginsFromImage: true
+  overwritePluginsFromImage: false
 
   # Enable HTML parsing using OWASP Markup Formatter Plugin (antisamy-markup-formatter), useful with ghprb plugin.
   # The plugin is not installed by default, please update controller.installPlugins.
@@ -311,10 +307,10 @@ controller:
   # etc.  Best reference is https://<jenkins_url>/configuration-as-code/reference.  The example below creates a welcome message:
   JCasC:
     defaultConfig: true
-    configScripts: { }
-    #  welcome-message: |
-    #    jenkins:
-    #      systemMessage: Welcome to our CI\CD server.  This Jenkins is configured and managed 'as code'.
+    configScripts:
+      welcome-message: |
+        jenkins:
+          systemMessage: Welcome to our CI\CD server.  This Jenkins is configured and managed 'as code'.
     # Ignored if securityRealm is defined in controller.JCasC.configScripts and
     # ignored if controller.enableXmlConfig=true as controller.securityRealm takes precedence
     securityRealm: |-

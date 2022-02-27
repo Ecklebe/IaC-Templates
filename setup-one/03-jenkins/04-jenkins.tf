@@ -17,6 +17,10 @@ http://
 */
 
 # Variable declaration
+variable "domain" {
+  description = "Path to the kubernetes config"
+  type        = string
+}
 variable "jenkins_chart_name" {
   type        = string
   description = "Jenkins Helm chart name."
@@ -33,11 +37,31 @@ variable "jenkins_persistent_volume_host_path" {
   type        = string
   description = "Path to the place where to store the jenkins volume"
 }
-
+variable "jenkins_controller_origin_image_name" {
+  type        = string
+  description = "Name of the origin docker image that should be used for the jenkins controller"
+}
+variable "jenkins_controller_custom_image_name" {
+  type        = string
+  description = "Name of the docker image that will be build through terraform"
+}
+variable "jenkins_controller_origin_image_version" {
+  type        = string
+  description = "Name of the origin docker image that should be used for the jenkins controller"
+}
+variable "jenkins_controller_custom_image_version" {
+  type        = string
+  description = "Name of the docker image that will be build through terraform"
+}
 variable "jenkins_admin_username" {
   type        = string
   description = "Name of the service acount for the jenkins admin"
 }
+variable "jenkins_plugins" {
+  type        = string
+  description = "Jenkins plugins to install"
+}
+
 
 resource "kubernetes_namespace" "jenkins" {
   metadata {
@@ -74,7 +98,6 @@ resource "kubernetes_persistent_volume" "jenkins-pv" {
     kubernetes_namespace.jenkins
   ]
 }
-
 
 resource "kubernetes_service_account" "jenkins" {
   metadata {
@@ -164,6 +187,25 @@ resource "kubernetes_cluster_role_binding" "jenkins" {
   }
 }
 
+resource "local_file" "jenkins-plugins" {
+  content  = var.jenkins_plugins
+  filename = "./docker/base-images/jenkins/plugins.txt"
+}
+
+resource "docker_image" "jenkins" {
+  name = var.jenkins_controller_custom_image_name
+  build {
+    path = "./docker/base-images/jenkins"
+    tag  = [join("", [var.jenkins_controller_custom_image_name, ":", var.jenkins_controller_custom_image_version])]
+    build_arg = {
+      parent_image : join("", [
+        var.jenkins_controller_origin_image_name, ":", var.jenkins_controller_origin_image_version
+      ])
+    }
+  }
+  depends_on = [local_file.jenkins-plugins]
+}
+
 data "template_file" "jenkins_values" {
   template = file("./templates/jenkins-values.yml")
 
@@ -177,9 +219,17 @@ data "template_file" "jenkins_values" {
     # For minikube, set this to NodePort, elsewhere use LoadBalancer
     # Use ClusterIP if your setup includes ingress controller
     SERVICE_TYPE = "ClusterIP"
+
+    # The name of the docker image to use for the jenkins controller
+    #CONTROLLER_IMAGE_NAME = var.jenkins_controller_origin_image_name
+    #CONTROLLER_IMAGE_VERSION = var.jenkins_controller_origin_image_version
+    CONTROLLER_IMAGE_NAME    = var.jenkins_controller_custom_image_name
+    CONTROLLER_IMAGE_VERSION = var.jenkins_controller_custom_image_version
   }
+  depends_on = [docker_image.jenkins]
 }
 
+/*
 resource "helm_release" "jenkins" {
 
   name       = var.jenkins_chart_name
@@ -188,6 +238,7 @@ resource "helm_release" "jenkins" {
   #version    = var.jenkins_chart_version
   namespace = kubernetes_namespace.jenkins.metadata.0.name
   timeout   = 600
+  force_update = true
   values = [
     data.template_file.jenkins_values.rendered
   ]
@@ -195,7 +246,9 @@ resource "helm_release" "jenkins" {
   depends_on = [
     kubernetes_namespace.jenkins,
     kubernetes_persistent_volume.jenkins-pv,
-    kubernetes_service_account.jenkins
+    kubernetes_service_account.jenkins,
+    data.template_file.jenkins_values
   ]
 }
+*/
 

@@ -4,8 +4,8 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/how-to-structure-a-terraform-project/.terraform" />
-      <excludeFolder url="file://$MODULE_DIR$/how-to-setup-jenkins-in-kubernetes/.terraform" />
       <excludeFolder url="file://$MODULE_DIR$/how-to-use-terraform-with-digitalocean/.terraform" />
+      <excludeFolder url="file://$MODULE_DIR$/setup-one/03-jenkins/.terraform" />
     </content>
     <orderEntry type="jdk" jdkName="Poetry (iac_tutorial)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

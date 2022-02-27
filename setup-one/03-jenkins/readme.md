@@ -8,6 +8,7 @@ Prerequisites:
 2. Helm executable downloaded and added to the system path
 3. Docker Desktop on Windows installed
 4. Kubernetes inside Docker Desktop active and running
+5. WSL 2 activated in Docker Desktop
 
 ## First Step
 
@@ -33,3 +34,7 @@ the setup process of the Jenkins, Traefik and further more the needed account, n
 If the setup is done and succesful, you should reach the Jenkins under
 "jenkins.<your defined domain>". For the login credentials you need to extract this from the installation. A way how to
 do this can be found on the offical jenkins installation page for Kubernetes.
+
+# Debug
+
+HELM_DEBUG=1 TF_LOG=TRACE
