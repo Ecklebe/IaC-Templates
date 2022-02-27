@@ -51,11 +51,11 @@ resource "kubernetes_manifest" "traefik-dashboard-ingress-route" {
     }
     "spec" = {
       #"entryPoints" = ["websecure"]
-      "entryPoints" = ["web"]
+      "entryPoints" = ["websecure"]
       #"entryPoints" = ["traefik"]
-      #"tls" =  {
-      #  "secretName" = "traefik-dashboard-cert"
-      #}
+      "tls" = {
+        "secretName" = kubernetes_secret.signed-tls-2.metadata[0].name
+      }
       "routes" = [
         {
           "match" = "Host(`traefik.localhost`)"
