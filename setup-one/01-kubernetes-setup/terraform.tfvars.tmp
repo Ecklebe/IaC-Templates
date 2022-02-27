@@ -1,0 +1,8 @@
+# 1 Backend variables
+domain                 = "localhost"
+kubernetes_config_path = "C:\\Users\\tobia\\.kube\\config"
+
+# 3 Ingress variables
+ingress_gateway_chart_name    = "traefik"
+ingress_gateway_chart_repo    = "https://helm.traefik.io/traefik"
+ingress_gateway_chart_version = "10.14.2"
