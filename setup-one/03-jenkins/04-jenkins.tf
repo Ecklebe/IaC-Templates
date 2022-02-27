@@ -224,10 +224,8 @@ data "template_file" "jenkins_values" {
     SERVICE_TYPE = "ClusterIP"
 
     # The name of the docker image to use for the jenkins controller
-    #CONTROLLER_IMAGE_NAME = var.jenkins_controller_origin_image_name
-    #CONTROLLER_IMAGE_VERSION = var.jenkins_controller_origin_image_version
-    CONTROLLER_IMAGE_NAME    = var.jenkins_controller_custom_image_name
-    CONTROLLER_IMAGE_VERSION = var.jenkins_controller_custom_image_version
+    CONTROLLER_IMAGE_NAME    = var.jenkins_controller_origin_image_name
+    CONTROLLER_IMAGE_VERSION = var.jenkins_controller_origin_image_version
   }
   depends_on = [docker_image.jenkins]
 }
