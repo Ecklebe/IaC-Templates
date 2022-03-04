@@ -84,6 +84,27 @@ resource "kubernetes_service" "registry" {
   }
 }
 
+resource "kubernetes_manifest" "registry-chain-middleware" {
+  manifest = {
+    "apiVersion" = "traefik.containo.us/v1alpha1"
+    "kind"       = "Middleware"
+    "metadata" = {
+      "name"      = "chain-middleware"
+      "namespace" = kubernetes_namespace.registry.metadata[0].name
+    }
+    "spec" = {
+      "chain" = {
+        "middlewares" = [
+          {
+            "name" = kubernetes_manifest.traefik-redirect-middleware.manifest.metadata.name
+          }
+        ]
+      }
+    }
+  }
+}
+
+
 resource "kubernetes_manifest" "registry-ingress-route-secure" {
   manifest = {
     "apiVersion" = "traefik.containo.us/v1alpha1"
@@ -93,7 +114,7 @@ resource "kubernetes_manifest" "registry-ingress-route-secure" {
       "namespace" = kubernetes_namespace.registry.metadata[0].name
     }
     "spec" = {
-      "entryPoints" = ["websecure", "web"]
+      "entryPoints" = ["websecure"]
       "tls" = {
         "secretName" = kubernetes_secret.signed-tls-2.metadata[0].name
       }
@@ -104,7 +125,39 @@ resource "kubernetes_manifest" "registry-ingress-route-secure" {
           "services" = [
             {
               "name" = kubernetes_service.registry.metadata[0].name
-              "port" = "5000"
+              "port" = kubernetes_service.registry.spec[0].port[0].port
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+
+resource "kubernetes_manifest" "registry-ingress-route" {
+  manifest = {
+    "apiVersion" = "traefik.containo.us/v1alpha1"
+    "kind"       = "IngressRoute"
+    "metadata" = {
+      "name"      = "ingress-route"
+      "namespace" = kubernetes_namespace.registry.metadata[0].name
+    }
+    "spec" = {
+      "entryPoints" = ["web"]
+      "routes" = [
+        {
+          "match" = "Host(`registry.localhost`)"
+          "kind"  = "Rule"
+          "middlewares" = [
+            {
+              "name"      = kubernetes_manifest.registry-chain-middleware.manifest.metadata.name
+              "namespace" = kubernetes_namespace.registry.metadata[0].name
+            }
+          ]
+          "services" = [
+            {
+              "name" = kubernetes_service.registry.metadata[0].name
+              "port" = kubernetes_service.registry.spec[0].port[0].port
             }
           ]
         }
