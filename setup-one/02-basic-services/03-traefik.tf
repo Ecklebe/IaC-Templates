@@ -41,6 +41,23 @@ resource "kubernetes_manifest" "traefik-dashboard-middleware" {
   }
 }
 
+resource "kubernetes_manifest" "traefik-redirect-middleware" {
+  manifest = {
+    "apiVersion" = "traefik.containo.us/v1alpha1"
+    "kind"       = "Middleware"
+    "metadata" = {
+      "name"      = "redirect-middleware"
+      "namespace" = var.traefik_namespace
+    }
+    "spec" = {
+      "redirectScheme" = {
+        "scheme"    = "https"
+        "permanent" = "true"
+      }
+    }
+  }
+}
+
 resource "kubernetes_manifest" "traefik-dashboard-ingress-route" {
   manifest = {
     "apiVersion" = "traefik.containo.us/v1alpha1"
