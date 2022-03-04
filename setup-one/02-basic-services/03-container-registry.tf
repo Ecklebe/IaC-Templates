@@ -96,7 +96,8 @@ resource "kubernetes_manifest" "registry-chain-middleware" {
       "chain" = {
         "middlewares" = [
           {
-            "name" = kubernetes_manifest.traefik-redirect-middleware.manifest.metadata.name
+            "name"      = kubernetes_manifest.traefik-redirect-middleware.manifest.metadata.name
+            "namespace" = var.traefik_namespace
           }
         ]
       }
