@@ -195,7 +195,7 @@ resource "local_file" "jenkins-plugins" {
   filename = "./docker/base-images/jenkins/plugins.txt"
 }
 
-resource "docker_image" "jenkins" {
+resource "docker_image" "jenkins-image-build" {
   name       = var.jenkins_controller_custom_image_name
   build {
     path      = "./docker/base-images/jenkins"
@@ -207,6 +207,16 @@ resource "docker_image" "jenkins" {
     }
   }
   depends_on = [local_file.jenkins-plugins]
+}
+
+resource "docker_image" "jenkins" {
+  name       = join("", [var.jenkins_controller_custom_image_name, ":", var.jenkins_controller_custom_image_version])
+  provisioner "local-exec" {
+    command = join("", [
+      "docker push ", var.jenkins_controller_custom_image_name, ":", var.jenkins_controller_custom_image_version
+    ])
+  }
+  depends_on = [docker_image.jenkins-image-build]
 }
 
 data "template_file" "jenkins_values" {
@@ -224,25 +234,22 @@ data "template_file" "jenkins_values" {
     SERVICE_TYPE = "ClusterIP"
 
     # The name of the docker image to use for the jenkins controller
-    CONTROLLER_IMAGE_NAME    = var.jenkins_controller_origin_image_name
-    CONTROLLER_IMAGE_VERSION = var.jenkins_controller_origin_image_version
-    #CONTROLLER_IMAGE_NAME    = var.jenkins_controller_custom_image_name
-    #CONTROLLER_IMAGE_VERSION = var.jenkins_controller_custom_image_version
+    CONTROLLER_IMAGE_NAME    = var.jenkins_controller_custom_image_name
+    CONTROLLER_IMAGE_VERSION = var.jenkins_controller_custom_image_version
   }
   depends_on = [docker_image.jenkins]
 }
 
-/*
 resource "helm_release" "jenkins" {
 
-  name       = var.jenkins_chart_name
-  repository = var.jenkins_chart_repo
-  chart      = var.jenkins_chart_name
+  name         = var.jenkins_chart_name
+  repository   = var.jenkins_chart_repo
+  chart        = var.jenkins_chart_name
   #version    = var.jenkins_chart_version
-  namespace = kubernetes_namespace.jenkins.metadata.0.name
-  timeout   = 600
+  namespace    = kubernetes_namespace.jenkins.metadata.0.name
+  timeout      = 1200
   force_update = true
-  values = [
+  values       = [
     data.template_file.jenkins_values.rendered
   ]
 
@@ -253,5 +260,3 @@ resource "helm_release" "jenkins" {
     data.template_file.jenkins_values
   ]
 }
-*/
-

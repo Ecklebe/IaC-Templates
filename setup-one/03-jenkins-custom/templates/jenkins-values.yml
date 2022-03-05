@@ -21,7 +21,7 @@ controller:
   image: ${CONTROLLER_IMAGE_NAME}
   tag: ${CONTROLLER_IMAGE_VERSION}
   #tagLabel: jdk11
-  imagePullPolicy:
+  imagePullPolicy: "Always"
   imagePullSecretName:
   # Optionally configure lifetime for controller-container
   lifecycle:
@@ -142,7 +142,7 @@ controller:
   # Put labels on Jenkins controller pod
   podLabels: { }
   # Used to create Ingress record (should used with ServiceType: ClusterIP)
-  # nodePort: <to set explicitly, choose port between 30000-32767
+  nodePort: 30001
   # Enable Kubernetes Startup, Liveness and Readiness Probes
   # if Startup Probe is supported, enable it too
   # ~ 2 minutes to allow Jenkins to restart when upgrading plugins. Set ReadinessTimeout to be shorter than LivenessTimeout.
@@ -307,10 +307,10 @@ controller:
   # etc.  Best reference is https://<jenkins_url>/configuration-as-code/reference.  The example below creates a welcome message:
   JCasC:
     defaultConfig: true
-    configScripts:
-      welcome-message: |
-        jenkins:
-          systemMessage: Welcome to our CI\CD server.  This Jenkins is configured and managed 'as code'.
+    configScripts: { }
+    #  welcome-message: |
+    #    jenkins:
+    #      systemMessage: Welcome to our CI\CD server.  This Jenkins is configured and managed 'as code'.
     # Ignored if securityRealm is defined in controller.JCasC.configScripts and
     # ignored if controller.enableXmlConfig=true as controller.securityRealm takes precedence
     securityRealm: |-
@@ -344,11 +344,11 @@ controller:
         #   limits:
         #     cpu: 100m
         #     memory: 100Mi
-      #   requests:
+        #   requests:
       #     cpu: 50m
       #     memory: 50Mi
       # How many connection-related errors to retry on
-      reqRetryConnect: 10
+      reqRetryConnect: 3
       # env:
       #   - name: REQ_TIMEOUT
       #     value: "30"
@@ -426,7 +426,6 @@ controller:
     #     servicePort: 8080
     # For Kubernetes v1.14+, use 'networking.k8s.io/v1beta1'
     # For Kubernetes v1.19+, use 'networking.k8s.io/v1'
-    #apiVersion: "extensions/v1beta1"
     apiVersion: "networking.k8s.io/v1"
     labels: { }
     annotations: {
@@ -852,7 +851,7 @@ backup:
     ## Use this key for AWS secret access key
     # awssecretkey: jenkins_aws_secret_key
     # Add additional environment variables
-  # jenkinsgcp:
+    # jenkinsgcp:
   ## Use this key for GCP credentials
   # gcpcredentials: credentials.json
   env: [ ]

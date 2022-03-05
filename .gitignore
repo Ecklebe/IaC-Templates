@@ -5,4 +5,4 @@
 /.temp/*
 /**/.terraform.lock.hcl
 /**/terraform.tfvars
-/setup-one/03-jenkins/docker/base-images/jenkins/plugins.txt
+/**/plugins.txt

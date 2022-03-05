@@ -10,8 +10,14 @@ jenkins_admin_username                  = "jenkins"
 jenkins_controller_origin_image_version = "2.319.3-jdk11"
 jenkins_controller_origin_image_name    = "jenkins/jenkins"
 jenkins_controller_custom_image_version = "2.319.3-jdk11"
-jenkins_controller_custom_image_name    = "custom-jenkins"
+jenkins_controller_custom_image_name    = "registry.localhost/jenkins/custom-jenkins"
 jenkins_plugins                         = <<EOF
+kubernetes:3538.v6b_005a_ddced1
+workflow-aggregator:2.6
+git:4.10.0
+configuration-as-code:1.55.1
+EOF
+jenkins_plugins_new                     = <<EOF
 kubernetes:3538.v6b_005a_ddced1
 ace-editor:1.1
 analysis-model-api:10.6.0

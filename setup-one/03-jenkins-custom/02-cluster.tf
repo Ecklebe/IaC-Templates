@@ -75,6 +75,7 @@ kubectl port-forward %(kubectl get pods --selector "app.kubernetes.io/name=traef
 kubectl port-forward traefik-87fd67f5-sfnd8 9000:9000
 */
 
+/*
 resource "kubernetes_namespace" "kubernetes-dashboard" {
   metadata {
     annotations = {
@@ -106,4 +107,5 @@ resource "kubernetes_cluster_role_binding" "kubernetes-dashboard-crb" {
     namespace = kubernetes_namespace.kubernetes-dashboard.metadata[0].name
   }
 }
+*/
 
