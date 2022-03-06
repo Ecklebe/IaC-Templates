@@ -40,7 +40,7 @@ Depending on your need you can run one of the following services in your cluster
 
 To find out what in detailed is needed for each service setup, please take a look in the corresponding folder readme.
 
-# Help
+## Help
 
 Sometimes it is needed to debug some parts more. In these cases the following two environment variables can be useful:
 
