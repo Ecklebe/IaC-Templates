@@ -321,6 +321,9 @@ controller:
         - id: "$${chart-admin-username}"
           name: "Jenkins Admin"
           password: "$${chart-admin-password}"
+        - id: "test"
+          name: "Jenkins Test User"
+          password: "test"
     # Ignored if authorizationStrategy is defined in controller.JCasC.configScripts
     authorizationStrategy: |-
       loggedInUsersCanDoAnything:

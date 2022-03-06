@@ -47,12 +47,15 @@ windows-slaves:1.8
 timestamper:1.17
 build-failure-analyzer:2.2.0
 discard-old-build:1.05
-warnings-ng:9.6.0
+warnings-ng:9.11.1
 log-parser:2.2
 prqa-plugin:3.3.3
 pull-request-monitoring:1.7.8
 role-strategy:3.2.0
 ws-cleanup:0.39
+powershell:1.7
+code-coverage-api:2.0.4
+locale:144.v1a_998824ddb_3
 EOF
 jenkins_plugins_old                     = <<EOF
 async-http-client:1.9.40.0
@@ -66,7 +69,6 @@ built-on-column:1.1
 claim:2.18.2
 clover:4.12.1
 cobertura:1.16
-code-coverage-api:2.0.4
 copyartifact:1.46.2
 cucumber-testresult-plugin:0.10.1
 dashboard-view:2.18
@@ -95,7 +97,6 @@ job-restrictions:0.8
 jquery-detached:1.2.1
 jquery:1.12.4-1
 kerberos-sso:1.7
-locale:1.4
 managed-scripts:1.5.4
 maven-repo-cleaner:1.2
 momentjs:1.1.1
@@ -109,9 +110,7 @@ p4:1.11.6
 parasoft-findings:10.5.0
 pipeline-stage-view:2.19
 pipeline-utility-steps:2.10.0
-powershell:1.7
 project-inheritance:21.04.03
-prqa-plugin:3.3.3
 pubsub-light:1.16
 rabbitmq-consumer:2.8
 resource-disposer:0.16
