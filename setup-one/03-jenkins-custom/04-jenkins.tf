@@ -4,7 +4,6 @@ $ jsonpath="{.data.jenkins-admin-password}"
 $ secret=$(kubectl get secret -n jenkins jenkins -o jsonpath=$jsonpath)
 $ echo $(echo $secret | base64 --decode)
 
-
 Get the Jenkins URL to visit by running these commands in the same shell:
 
 $ jsonpath="{.spec.ports[0].nodePort}"
@@ -13,10 +12,13 @@ $ jsonpath="{.items[0].status.addresses[0].address}"
 $ NODE_IP=$(kubectl get nodes -n jenkins -o jsonpath=$jsonpath)
 $ echo http://$NODE_IP:$NODE_PORT/login
 
-https://github.com/jenkinsci/helm-charts/blob/main/charts/jenkins/VALUES_SUMMARY.md#jenkins-plugins
-https://hands-on-tech.github.io/2020/03/15/k8s-jenkins-example.html
-https://github.com/jenkinsci/docker/blob/master/README.md
+Windows command line + (1)
+kubectl get secret -n jenkins jenkins -o jsonpath="{.data.jenkins-admin-password}"
 
+(1) https://github.com/jenkinsci/helm-charts/blob/main/charts/jenkins/VALUES_SUMMARY.md#jenkins-plugins
+(2) https://hands-on-tech.github.io/2020/03/15/k8s-jenkins-example.html
+(3) https://github.com/jenkinsci/docker/blob/master/README.md
+(4) https://www.base64decode.org/
 */
 
 # Variable declaration
@@ -195,7 +197,7 @@ resource "local_file" "jenkins-plugins" {
   filename = "./docker/base-images/jenkins/plugins.txt"
 }
 
-resource "docker_image" "jenkins-image-build" {
+resource "docker_image" "jenkins" {
   name       = var.jenkins_controller_custom_image_name
   build {
     path      = "./docker/base-images/jenkins"
@@ -206,17 +208,12 @@ resource "docker_image" "jenkins-image-build" {
       ])
     }
   }
-  depends_on = [local_file.jenkins-plugins]
-}
-
-resource "docker_image" "jenkins" {
-  name       = join("", [var.jenkins_controller_custom_image_name, ":", var.jenkins_controller_custom_image_version])
   provisioner "local-exec" {
     command = join("", [
       "docker push ", var.jenkins_controller_custom_image_name, ":", var.jenkins_controller_custom_image_version
     ])
   }
-  depends_on = [docker_image.jenkins-image-build]
+  depends_on = [local_file.jenkins-plugins]
 }
 
 data "template_file" "jenkins_values" {
@@ -247,7 +244,7 @@ resource "helm_release" "jenkins" {
   chart        = var.jenkins_chart_name
   #version    = var.jenkins_chart_version
   namespace    = kubernetes_namespace.jenkins.metadata.0.name
-  timeout      = 1200
+  timeout      = 2400
   force_update = true
   values       = [
     data.template_file.jenkins_values.rendered
