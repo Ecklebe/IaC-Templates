@@ -9,6 +9,13 @@ After applying these services and ``IngressRoutes`` the services should be reach
 - http://traefik.localhost/dashboard/#/
 - http://registry.localhost/v2/_catalog
 
+## For the traefik dashboard
+
+For the login you can use the following account:
+
+- username = traefik-admin
+- password = traefik~2022
+
 ## For the docker registry to work
 
 ### Adjust the hosts file
