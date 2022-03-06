@@ -1,40 +1,24 @@
-# How to setup a Jenkins in a Kubernetes Cluster
+# Custom Jenkins
 
-This template describes the setup of a Jenkins inside a kubernetes cluster behind the loadbalancer and proxy Traefik.
+This folder takes care of a custom jenkins setup.
 
-Prerequisites:
-
-1. Terraform executable downloaded and added to the system path
-2. Helm executable downloaded and added to the system path
-3. Docker Desktop on Windows installed
-4. Kubernetes inside Docker Desktop active and running
-5. WSL 2 activated in Docker Desktop
-
-## First Step
-
-Copy the file "terraform.tfvars.tmp" to "terraform.tfvars" and configure in the copy the parameters to your needs.
-
-## Second Step
+## Prerequisites:
 
 Create the folder that you defined for the parameter "jenkins_persistent_volume_host_path". This will be done otherwise
 also by Terraform, but then the access rights are not in the way that the Jenkins installation wizard can use the
 directory.
 
-## Third Step
+## Setup
 
-Open a commandline window and change the working directory to this folder here. Execute then "terraform init"
+After applying terraform the Jenkins should be reachable with the following link:
 
-## Fourth Step
+- http://jenkins.localhost
 
-Execute "terraform plan" to check if the config is valid. If so execute further with "terraform apply". This will start
-the setup process of the Jenkins, Traefik and further more the needed account, namespaces and ingressroutes.
+For the login you can use the following two ways:
 
-## Five's Step
+1. The default admin account. Check (1) how to use this account.
+2. or the test account
+   - Username: test
+   - Password: test
 
-If the setup is done and succesful, you should reach the Jenkins under
-"jenkins.<your defined domain>". For the login credentials you need to extract this from the installation. A way how to
-do this can be found on the offical jenkins installation page for Kubernetes.
-
-# Debug
-
-HELM_DEBUG=1 TF_LOG=TRACE
+(1) https://www.jenkins.io/doc/book/installing/kubernetes/#install-jenkins 
