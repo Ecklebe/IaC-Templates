@@ -1,15 +1,16 @@
-/*
-Notes:
-
-kubectl port-forward %(kubectl get pods --selector "app.kubernetes.io/name=traefik" --output=name)% 9000:9000
-kubectl port-forward traefik-87fd67f5-sfnd8 9000:9000
-*/
-# Variable declaration
-
 variable "traefik_namespace" {
   description = "Name of the namespace where Traefik will be located"
   type        = string
-  default     = "traefik"
+}
+
+variable "traefik_admin_username" {
+  description = "Name of the admin account"
+  type        = string
+}
+
+variable "traefik_admin_password" {
+  description = "Password of the admin account"
+  type        = string
 }
 
 resource "kubernetes_secret" "traefik-dashboard-auth" {
@@ -18,8 +19,8 @@ resource "kubernetes_secret" "traefik-dashboard-auth" {
     namespace = var.traefik_namespace
   }
   data = {
-    username = "traefik-admin"
-    password = "traefik~2022"
+    username = var.traefik_admin_username
+    password = var.traefik_admin_password
   }
 
   type = "kubernetes.io/basic-auth"
@@ -67,9 +68,7 @@ resource "kubernetes_manifest" "traefik-dashboard-ingress-route" {
       "namespace" = var.traefik_namespace
     }
     "spec" = {
-      #"entryPoints" = ["websecure"]
       "entryPoints" = ["websecure"]
-      #"entryPoints" = ["traefik"]
       "tls" = {
         "secretName" = kubernetes_secret.signed-tls-2.metadata[0].name
       }
@@ -94,3 +93,39 @@ resource "kubernetes_manifest" "traefik-dashboard-ingress-route" {
     }
   }
 }
+
+
+/*
+resource "kubernetes_manifest" "traefik-service-monitor" {
+  manifest = {
+    "apiVersion" = "monitoring.coreos.com/v1"
+    "kind"       = "ServiceMonitor"
+    "metadata" = {
+      "name"      = "traefik"
+      "namespace" = "default"
+    }
+    "labels" = {
+      "app" = "traefik"
+      "release" = "prometheus-stack"
+    }
+    "spec" = {
+      "jobLabel" = "traefik-metrics"
+      "selector" = {
+        "matchLabels" = {
+          "app.kubernetes.io/instance" = "traefik"
+          "app.kubernetes.io/name" = "traefik-dashboard"
+        }
+      }
+      "namespaceSelector" = {
+        "matchNames" = [
+          var.traefik_namespace
+        ]
+      }
+      "endpoints" = {
+        "port"    = "traefik"
+        "path" = "/metrics"
+      }
+    }
+  }
+}
+*/

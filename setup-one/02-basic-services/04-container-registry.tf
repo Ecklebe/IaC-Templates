@@ -105,7 +105,6 @@ resource "kubernetes_manifest" "registry-chain-middleware" {
   }
 }
 
-
 resource "kubernetes_manifest" "registry-ingress-route-secure" {
   manifest = {
     "apiVersion" = "traefik.containo.us/v1alpha1"
