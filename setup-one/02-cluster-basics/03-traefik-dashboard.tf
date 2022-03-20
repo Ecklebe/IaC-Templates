@@ -1,3 +1,7 @@
+/*
+https://traefik.io/blog/capture-traefik-metrics-for-apps-on-kubernetes-with-prometheus/
+*/
+
 variable "traefik_namespace" {
   description = "Name of the namespace where Traefik will be located"
   type        = string
@@ -94,26 +98,30 @@ resource "kubernetes_manifest" "traefik-dashboard-ingress-route" {
   }
 }
 
-
-/*
 resource "kubernetes_manifest" "traefik-service-monitor" {
   manifest = {
     "apiVersion" = "monitoring.coreos.com/v1"
     "kind"       = "ServiceMonitor"
     "metadata" = {
       "name"      = "traefik"
-      "namespace" = "default"
-    }
-    "labels" = {
-      "app" = "traefik"
-      "release" = "prometheus-stack"
+      "namespace" = "monitoring"
+      "labels" = {
+        "app"     = "traefik"
+        "release" = "prometheus-stack"
+      }
     }
     "spec" = {
       "jobLabel" = "traefik-metrics"
+      "endpoints" = [
+        {
+          "port" = "traefik"
+          "path" = "/metrics"
+        }
+      ]
       "selector" = {
         "matchLabels" = {
           "app.kubernetes.io/instance" = "traefik"
-          "app.kubernetes.io/name" = "traefik-dashboard"
+          "app.kubernetes.io/name"     = "traefik-dashboard"
         }
       }
       "namespaceSelector" = {
@@ -121,11 +129,43 @@ resource "kubernetes_manifest" "traefik-service-monitor" {
           var.traefik_namespace
         ]
       }
-      "endpoints" = {
-        "port"    = "traefik"
-        "path" = "/metrics"
-      }
     }
   }
 }
-*/
+
+resource "kubernetes_manifest" "traefik-prometheus-rule" {
+  manifest = {
+    "apiVersion" = "monitoring.coreos.com/v1"
+    "kind"       = "PrometheusRule"
+    "metadata" = {
+      "name"      = "traefik-alert-rules"
+      "namespace" = "monitoring"
+      "labels" = {
+        "app"     = "kube-prometheus-stack"
+        "release" = "prometheus-stack"
+      }
+      "annotations" = {
+        "meta.helm.sh/release-name"      = "prometheus-stack"
+        "meta.helm.sh/release-namespace" = "monitoring"
+      }
+    }
+    "spec" = {
+      "groups" = [
+        {
+          "name" = "Traefik"
+          "rules" = [
+            {
+              "alert" = "TooManyRequest"
+              "expr"  = "avg(traefik_entrypoint_open_connections{job='traefik-dashboard',namespace='traefik'}) > 5"
+              "for"   = "1m"
+              "labels" = {
+                "severity" = "critical"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+
