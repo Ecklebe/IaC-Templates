@@ -19,12 +19,6 @@ variable "grafana_password" {
   type        = string
 }
 
-resource "kubernetes_namespace" "monitoring" {
-  metadata {
-    name = var.monitoring_namespace
-  }
-}
-
 data "template_file" "kube_stack_prometheus_values" {
   template = file("./templates/monitoring-values.yml")
 
@@ -40,7 +34,7 @@ resource "helm_release" "prometheus" {
 
   chart        = "kube-prometheus-stack"
   name         = "prometheus"
-  namespace    = kubernetes_namespace.monitoring.metadata[0].name
+  namespace    = var.monitoring_namespace
   repository   = "https://prometheus-community.github.io/helm-charts"
   force_update = true
 

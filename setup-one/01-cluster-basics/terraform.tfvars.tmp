@@ -10,4 +10,4 @@ traefik_namespace             = "kube-system"
 
 grafana_username     = "admin"
 grafana_password     = "grafana~2022"
-monitoring_namespace = "monitoring"
+monitoring_namespace = "default"
