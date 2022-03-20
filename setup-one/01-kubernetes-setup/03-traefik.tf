@@ -48,3 +48,27 @@ resource "helm_release" "traefik_helm_release" {
     file("templates/traefik-values.yml")
   ]
 }
+
+resource "kubernetes_service" "traefik-dashboard" {
+  metadata {
+    name      = "traefik-dashboard"
+    namespace = var.traefik_namespace
+    labels = {
+      "app.kubernetes.io/instance" = "traefik"
+      "app.kubernetes.io/name"     = "traefik-dashboard"
+    }
+  }
+  spec {
+    port {
+      name        = "traefik"
+      port        = 9000
+      target_port = "traefik"
+      protocol    = "TCP"
+    }
+    selector = {
+      "app.kubernetes.io/instance" = "traefik"
+      "app.kubernetes.io/name"     = "traefik"
+    }
+    type = "ClusterIP"
+  }
+}
