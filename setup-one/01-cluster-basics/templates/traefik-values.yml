@@ -239,7 +239,7 @@ additionalArguments:
   #- "--entrypoints.websecure.http.tls"
   #  - "--providers.kubernetesingress.ingressclass=traefik-internal"
   #- "--providers.kubernetesIngress.ingressClass=traefik-cert-manager"
-  - "--ping"
+  # - "--ping"
   #- "--metrics.prometheus"
 
 # Environment variables to be passed to Traefik's binary
