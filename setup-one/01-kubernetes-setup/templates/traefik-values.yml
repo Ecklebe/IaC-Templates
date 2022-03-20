@@ -210,6 +210,14 @@ metrics:
   #   protocol: udp
   prometheus:
     entryPoint: metrics
+    addEntryPointsLabels: true
+    addRoutersLabels: true
+    buckets:
+      - 0.1
+      - 0.3
+      - 1.2
+      - 5.0
+    addServicesLabels: true
   # statsd:
   #   address: localhost:8125
 
