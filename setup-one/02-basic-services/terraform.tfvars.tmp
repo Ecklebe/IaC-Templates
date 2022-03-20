@@ -10,3 +10,8 @@ signed_tls_subject = {
   common_name  = "localhost"
   organization = "Test Environment for IaC"
 }
+
+traefik_admin_username = "traefik-admin"
+traefik_admin_password = "traefik~2022"
+traefik_namespace      = "traefik"
+
