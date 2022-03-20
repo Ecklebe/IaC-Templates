@@ -4,7 +4,7 @@ resource "kubernetes_manifest" "prometheus-dashboard-ingress-route" {
     "kind"       = "IngressRoute"
     "metadata" = {
       "name"      = "prometheus-dashboard"
-      "namespace" = "monitoring"
+      "namespace" = var.monitoring_namespace
     }
     "spec" = {
       "entryPoints" = ["web"]

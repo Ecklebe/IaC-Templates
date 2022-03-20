@@ -109,7 +109,7 @@ resource "kubernetes_manifest" "traefik-service-monitor" {
     "kind"       = "ServiceMonitor"
     "metadata" = {
       "name"      = "traefik"
-      "namespace" = "monitoring"
+      "namespace" = var.monitoring_namespace
       "labels" = {
         "app"     = "traefik"
         "release" = "prometheus-stack"
@@ -144,14 +144,14 @@ resource "kubernetes_manifest" "traefik-prometheus-rule" {
     "kind"       = "PrometheusRule"
     "metadata" = {
       "name"      = "traefik-alert-rules"
-      "namespace" = "monitoring"
+      "namespace" = var.monitoring_namespace
       "labels" = {
         "app"     = "kube-prometheus-stack"
         "release" = "prometheus-stack"
       }
       "annotations" = {
         "meta.helm.sh/release-name"      = "prometheus-stack"
-        "meta.helm.sh/release-namespace" = "monitoring"
+        "meta.helm.sh/release-namespace" = var.monitoring_namespace
       }
     }
     "spec" = {
@@ -161,7 +161,7 @@ resource "kubernetes_manifest" "traefik-prometheus-rule" {
           "rules" = [
             {
               "alert" = "TooManyRequest"
-              "expr"  = "avg(traefik_entrypoint_open_connections{job='traefik-dashboard',namespace='traefik'}) > 5"
+              "expr"  = "avg(traefik_entrypoint_open_connections{job='traefik-dashboard',namespace='kube-system'}) > 5"
               "for"   = "1m"
               "labels" = {
                 "severity" = "critical"
@@ -173,4 +173,3 @@ resource "kubernetes_manifest" "traefik-prometheus-rule" {
     }
   }
 }
-
