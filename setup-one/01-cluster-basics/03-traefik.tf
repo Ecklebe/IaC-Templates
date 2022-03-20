@@ -27,13 +27,6 @@ variable "domain" {
 variable "traefik_namespace" {
   description = "Name of the namespace where Traefik will be located"
   type        = string
-  default     = "traefik"
-}
-
-resource "kubernetes_namespace" "traefik" {
-  metadata {
-    name = var.traefik_namespace
-  }
 }
 
 # Deploy Ingress Controller Traefik
@@ -42,7 +35,7 @@ resource "helm_release" "traefik_helm_release" {
   repository   = var.ingress_gateway_chart_repo
   chart        = var.ingress_gateway_chart_name
   version      = var.ingress_gateway_chart_version
-  namespace    = kubernetes_namespace.traefik.metadata.0.name
+  namespace    = var.traefik_namespace
   force_update = true
   values = [
     file("templates/traefik-values.yml")
@@ -63,6 +56,12 @@ resource "kubernetes_service" "traefik-dashboard" {
       name        = "traefik"
       port        = 9000
       target_port = "traefik"
+      protocol    = "TCP"
+    }
+    port {
+      name        = "metrics"
+      port        = 9100
+      target_port = "metrics"
       protocol    = "TCP"
     }
     selector = {

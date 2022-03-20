@@ -6,6 +6,7 @@ kubernetes_config_path = "C:\\Users\\tobia\\.kube\\config"
 ingress_gateway_chart_name    = "traefik"
 ingress_gateway_chart_repo    = "https://helm.traefik.io/traefik"
 ingress_gateway_chart_version = "10.14.2"
+traefik_namespace             = "kube-system"
 
 grafana_username     = "admin"
 grafana_password     = "grafana~2022"
