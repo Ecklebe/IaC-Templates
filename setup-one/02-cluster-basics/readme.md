@@ -9,6 +9,7 @@ After applying these services and ``IngressRoutes`` the services should be reach
 - http://traefik.localhost/dashboard/#/
 - http://registry.localhost/v2/_catalog
 - http://grafana.localhost/
+- http://prometheus.localhost/
 
 ## For the traefik dashboard
 
