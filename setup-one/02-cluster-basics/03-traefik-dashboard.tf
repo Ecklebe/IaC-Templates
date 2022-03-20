@@ -119,7 +119,7 @@ resource "kubernetes_manifest" "traefik-service-monitor" {
       "jobLabel" = "traefik-metrics"
       "endpoints" = [
         {
-          "port" = "traefik"
+          "port" = "metrics"
           "path" = "/metrics"
         }
       ]
