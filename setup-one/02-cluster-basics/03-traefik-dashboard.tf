@@ -98,6 +98,11 @@ resource "kubernetes_manifest" "traefik-dashboard-ingress-route" {
   }
 }
 
+/*
+Service Monitor
+OR
+PodMonitor https://github.com/mmatur/prometheus-traefik/blob/master/monitor/01-traefik.yaml
+*/
 resource "kubernetes_manifest" "traefik-service-monitor" {
   manifest = {
     "apiVersion" = "monitoring.coreos.com/v1"
