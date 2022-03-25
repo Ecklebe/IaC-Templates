@@ -98,35 +98,24 @@ resource "kubernetes_manifest" "traefik-dashboard-ingress-route" {
   }
 }
 
-/*
-Service Monitor
-OR
-PodMonitor https://github.com/mmatur/prometheus-traefik/blob/master/monitor/01-traefik.yaml
-*/
-resource "kubernetes_manifest" "traefik-service-monitor" {
+resource "kubernetes_manifest" "traefik-metrics-service-monitor" {
   manifest = {
     "apiVersion" = "monitoring.coreos.com/v1"
     "kind"       = "ServiceMonitor"
     "metadata" = {
-      "name"      = "traefik"
+      "name"      = "traefik-metrics-service-monitor"
       "namespace" = var.monitoring_namespace
       "labels" = {
         "app"     = "traefik"
-        "release" = "prometheus-stack"
+        "release" = "prometheus"
       }
     }
     "spec" = {
       "jobLabel" = "traefik-metrics"
-      "endpoints" = [
-        {
-          "port" = "metrics"
-          "path" = "/metrics"
-        }
-      ]
       "selector" = {
         "matchLabels" = {
           "app.kubernetes.io/instance" = "traefik"
-          "app.kubernetes.io/name"     = "traefik-dashboard"
+          "app.kubernetes.io/name"     = "traefik-metrics"
         }
       }
       "namespaceSelector" = {
@@ -134,6 +123,12 @@ resource "kubernetes_manifest" "traefik-service-monitor" {
           var.traefik_namespace
         ]
       }
+      "endpoints" = [
+        {
+          "port" = "metrics"
+          "path" = "/metrics"
+        }
+      ]
     }
   }
 }
@@ -143,16 +138,16 @@ resource "kubernetes_manifest" "traefik-prometheus-rule" {
     "apiVersion" = "monitoring.coreos.com/v1"
     "kind"       = "PrometheusRule"
     "metadata" = {
-      "name"      = "traefik-alert-rules"
-      "namespace" = var.monitoring_namespace
-      "labels" = {
-        "app"     = "kube-prometheus-stack"
-        "release" = "prometheus-stack"
-      }
       "annotations" = {
-        "meta.helm.sh/release-name"      = "prometheus-stack"
+        "meta.helm.sh/release-name"      = "prometheus"
         "meta.helm.sh/release-namespace" = var.monitoring_namespace
       }
+      "labels" = {
+        "app"     = "kube-prometheus-stack-prometheus"
+        "release" = "prometheus"
+      }
+      "name"      = "traefik-alert-rules"
+      "namespace" = var.monitoring_namespace
     }
     "spec" = {
       "groups" = [
