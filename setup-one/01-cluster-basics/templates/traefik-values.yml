@@ -21,17 +21,25 @@ deployment:
   # Additional deployment annotations (e.g. for jaeger-operator sidecar injection)
   annotations: { }
   # Additional deployment labels (e.g. for filtering deployment by custom labels)
-  labels: { }
+  labels:
+    app: traefik
+
   # Additional pod annotations (e.g. for mesh injection or prometheus scraping)
-  podAnnotations: { }
+  podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9100"
+
+
   # Additional Pod labels (e.g. for filtering Pod by custom labels)
-  podLabels: { }
+  podLabels:
+    app: traefik
+
   # Additional containers (e.g. for metric offloading sidecars)
   additionalContainers: [ ]
     # https://docs.datadoghq.com/developers/dogstatsd/unix_socket/?tab=host
     # - name: socat-proxy
     # image: alpine/socat:1.0.5
-    # args: ["-s", "-u", "udp-recv:8125", "unix-sendto:/socket/socket"]
+  # args: ["-s", "-u", "udp-recv:8125", "unix-sendto:/socket/socket"]
   # volumeMounts:
   #   - name: dsdsocket
   #     mountPath: /socket
@@ -209,17 +217,22 @@ metrics:
   #   address: localhost:8089
   #   protocol: udp
   prometheus:
-    entryPoint: metrics
-    addEntryPointsLabels: true
-    addRoutersLabels: true
+    enabled: true
+    entrypoint: metrics
+    addentrypointslabels: true
+    addrouterslabels: true
     buckets:
       - 0.1
       - 0.3
       - 1.2
       - 5.0
-    addServicesLabels: true
+    addserviceslabels: true
+    manualrouting: false
   # statsd:
   #   address: localhost:8125
+
+forwardingTimeouts:
+  dialTimeout: '10s'
 
 tracing: { }
 # instana:
