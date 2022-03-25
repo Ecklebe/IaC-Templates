@@ -2469,42 +2469,43 @@ prometheus:
     ## The scrape configuration example below will find master nodes, provided they have the name .*mst.*, relabel the
     ## port to 2379 and allow etcd scraping provided it is running on all Kubernetes master nodes
     ##
-    additionalScrapeConfigs:
-      # https://github.com/traefik-tech-blog/traefik-sre-metrics/blob/master/metrics/prometheus-config.yaml
-      - job_name: 'traefik'
-        kubernetes_sd_configs:
-          - role: pod
-            selectors:
-              - role: pod
-                label: "app=traefik"
-        relabel_configs:
-          - source_labels: [ __meta_kubernetes_pod_annotation_prometheus_io_scrape ]
-            action: keep
-            regex: true
-          - source_labels: [ __meta_kubernetes_pod_annotation_prometheus_io_path ]
-            action: replace
-            target_label: __metrics_path__
-            regex: (.+)
-          - source_labels: [ __address__, __meta_kubernetes_pod_annotation_prometheus_io_port ]
-            action: replace
-            regex: ([^:]+)(?::\d+)?;(\d+)
-            replacement: $1:$2
-            target_label: __address__
-          - source_labels: [ __meta_kubernetes_service_annotation_prometheus_io_scheme ]
-            action: replace
-            target_label: __scheme__
-            regex: (https?)
-          - action: labelmap
-            regex: __meta_kubernetes_pod_label_(.+)
-          - source_labels: [ __meta_kubernetes_namespace ]
-            action: replace
-            target_label: namespace
-          - source_labels: [ __meta_kubernetes_service_name ]
-            action: replace
-            target_label: service
-          - source_labels: [ __meta_kubernetes_pod_container_name ]
-            action: replace
-            target_label: container
+    additionalScrapeConfigs: [ ]
+    #    additionalScrapeConfigs:
+    #      # https://github.com/traefik-tech-blog/traefik-sre-metrics/blob/master/metrics/prometheus-config.yaml
+    #      - job_name: 'traefik'
+    #        kubernetes_sd_configs:
+    #          - role: pod
+    #            selectors:
+    #              - role: pod
+    #                label: "app=traefik"
+    #        relabel_configs:
+    #          - source_labels: [ __meta_kubernetes_pod_annotation_prometheus_io_scrape ]
+    #            action: keep
+    #            regex: true
+    #          - source_labels: [ __meta_kubernetes_pod_annotation_prometheus_io_path ]
+    #            action: replace
+    #            target_label: __metrics_path__
+    #            regex: (.+)
+    #          - source_labels: [ __address__, __meta_kubernetes_pod_annotation_prometheus_io_port ]
+    #            action: replace
+    #            regex: ([^:]+)(?::\d+)?;(\d+)
+    #            replacement: $1:$2
+    #            target_label: __address__
+    #          - source_labels: [ __meta_kubernetes_service_annotation_prometheus_io_scheme ]
+    #            action: replace
+    #            target_label: __scheme__
+    #            regex: (https?)
+    #          - action: labelmap
+    #            regex: __meta_kubernetes_pod_label_(.+)
+    #          - source_labels: [ __meta_kubernetes_namespace ]
+    #            action: replace
+    #            target_label: namespace
+    #          - source_labels: [ __meta_kubernetes_service_name ]
+    #            action: replace
+    #            target_label: service
+    #          - source_labels: [ __meta_kubernetes_pod_container_name ]
+    #            action: replace
+    #            target_label: container
     # - job_name: kube-etcd
     #   kubernetes_sd_configs:
     #     - role: node
