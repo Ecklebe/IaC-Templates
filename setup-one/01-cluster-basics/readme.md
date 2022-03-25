@@ -9,3 +9,15 @@ There are different ways to apply CRD(s) to kubernetes:
 - The first way would be applying them with ``kubectl apply -f some.yml``
 - The second way is using the terraform named resource ``kubernetes_manifest``
   . This is also the reason why we need this pre-setup step here.
+
+## Traefik
+
+### Dashboard
+
+kubectl port-forward service/traefik-dashboard -n kube-system 9000:9000
+http://127.0.0.1:9000/dashboard
+
+### Metrics
+
+kubectl port-forward service/traefik-metrics -n kube-system 9100:9100
+http://127.0.0.1:9100/metrics
