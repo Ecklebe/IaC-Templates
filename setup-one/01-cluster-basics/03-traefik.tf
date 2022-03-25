@@ -47,16 +47,20 @@ resource "kubernetes_service" "traefik-dashboard" {
     name      = "traefik-dashboard"
     namespace = var.traefik_namespace
     labels = {
-      "service" = "traefik-dashboard"
+      "app.kubernetes.io/instance" = "traefik"
+      "app.kubernetes.io/name"     = "traefik-dashboard"
     }
   }
   spec {
     port {
-      port     = 9000
-      protocol = "TCP"
+      name        = "traefik"
+      port        = 9000
+      target_port = "traefik"
+      protocol    = "TCP"
     }
     selector = {
-      app : "traefik"
+      "app.kubernetes.io/instance" = "traefik"
+      "app.kubernetes.io/name"     = "traefik"
     }
     type = "ClusterIP"
   }
@@ -67,16 +71,20 @@ resource "kubernetes_service" "traefik-metrics" {
     name      = "traefik-metrics"
     namespace = var.traefik_namespace
     labels = {
-      "service" = "traefik-metrics"
+      "app.kubernetes.io/instance" = "traefik"
+      "app.kubernetes.io/name"     = "traefik-metrics"
     }
   }
   spec {
     port {
-      port     = 9100
-      protocol = "TCP"
+      name        = "metrics"
+      port        = 9100
+      target_port = "metrics"
+      protocol    = "TCP"
     }
     selector = {
-      app : "traefik"
+      "app.kubernetes.io/instance" = "traefik"
+      "app.kubernetes.io/name"     = "traefik"
     }
     type = "ClusterIP"
   }
