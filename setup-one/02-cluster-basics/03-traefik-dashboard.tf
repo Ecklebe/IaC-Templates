@@ -1,5 +1,6 @@
 /*
 https://traefik.io/blog/capture-traefik-metrics-for-apps-on-kubernetes-with-prometheus/
+https://community.traefik.io/t/capture-traefik-metrics-for-apps-on-kubernetes-with-prometheus/9811
 */
 
 variable "traefik_namespace" {

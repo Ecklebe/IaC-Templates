@@ -21,3 +21,8 @@ http://127.0.0.1:9000/dashboard
 
 kubectl port-forward service/traefik-metrics -n kube-system 9100:9100
 http://127.0.0.1:9100/metrics
+
+## Alertmanager
+
+kubectl port-forward service/prometheus-kube-prometheus-alertmanager -n default 9093:9093
+http://127.0.0.1:9093
