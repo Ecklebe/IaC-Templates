@@ -128,6 +128,51 @@ resource "kubernetes_manifest" "traefik-metrics-service-monitor" {
         {
           "port" = "metrics"
           "path" = "/metrics"
+          #          "metricRelabelings" = [
+          #            {
+          #              "sourceLabels" = ["__meta_kubernetes_pod_annotation_prometheus_io_scrape"]
+          #              "action" = "keep"
+          #              "regex" = "true"
+          #            },
+          #            {
+          #              "sourceLabels" = ["__meta_kubernetes_pod_annotation_prometheus_io_path"]
+          #              "action" = "replace"
+          #              "regex" = "(.+)"
+          #              "targetLabel" = "__metrics_path__"
+          #            },
+          #            {
+          #              "sourceLabels" = ["__address__", "__meta_kubernetes_pod_annotation_prometheus_io_port"]
+          #              "action" = "replace"
+          #              "regex" = "([^:]+)(?::\\d+)?;(\\d+)"
+          #              "targetLabel" = "__address__"
+          #              "replacement" = "$1:$2"
+          #            },
+          #            {
+          #              "sourceLabels" = ["__meta_kubernetes_service_annotation_prometheus_io_scheme"]
+          #              "action" = "replace"
+          #              "regex" = "(https?)"
+          #              "targetLabel" = "__scheme__"
+          #            },
+          #            {
+          #              "action" = "labelmap"
+          #              "regex" = "__meta_kubernetes_pod_label_(.+)"
+          #            },
+          #            {
+          #              "sourceLabels" = ["__meta_kubernetes_namespace"]
+          #              "action" = "replace"
+          #              "targetLabel" = "namespace"
+          #            },
+          #            {
+          #              "sourceLabels" = ["__meta_kubernetes_service_name"]
+          #              "action" = "replace"
+          #              "targetLabel" = "service"
+          #            },
+          #            {
+          #              "sourceLabels" = ["__meta_kubernetes_pod_container_name"]
+          #              "action" = "replace"
+          #              "targetLabel" = "container"
+          #            }
+          #          ]
         }
       ]
     }
@@ -157,7 +202,7 @@ resource "kubernetes_manifest" "traefik-prometheus-rule" {
           "rules" = [
             {
               "alert" = "TooManyRequest"
-              "expr"  = "avg(traefik_entrypoint_open_connections{job='traefik-dashboard',namespace='kube-system'}) > 5"
+              "expr"  = "avg(traefik_entrypoint_open_connections{job='traefik-metrics',namespace='kube-system'}) > 5"
               "for"   = "1m"
               "labels" = {
                 "severity" = "critical"

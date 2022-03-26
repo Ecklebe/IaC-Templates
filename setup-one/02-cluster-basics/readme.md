@@ -65,3 +65,21 @@ docker tag traefik/whoami registry.localhost/traefik/whoami
 docker push registry.localhost/traefik/whoami
 ```
 
+## For the prometheus dashboard
+
+Some example searches:
+
+````aidl
+max(rate(traefik_service_requests_total[1m])) by (service)
+````
+
+````aidl
+max(rate(traefik_service_requests_total[1m])) by (exported_service)
+````
+
+````aidl
+(
+    max(irate(traefik_service_request_duration_seconds_sum[1m])) by (exported_service)
+ /  max(irate(traefik_service_request_duration_seconds_count[1m])) by (exported_service)
+) * 1000
+````
