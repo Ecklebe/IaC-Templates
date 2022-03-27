@@ -249,6 +249,9 @@ globalArguments:
 ## Use curly braces to pass values: `helm install --set="additionalArguments={--providers.kubernetesingress.ingressclass=traefik-internal,--log.level=DEBUG}"`
 additionalArguments:
   - "--log.level=DEBUG"
+  - "--tracing.jaeger=true"
+  - "--tracing.jaeger.samplingServerURL=http://jaeger-agent.default.svc:5778/sampling"
+  - "--tracing.jaeger.localAgentHostPort=jaeger-agent.default.svc:6831"
   #- "--entrypoints.websecure.http.tls"
   #  - "--providers.kubernetesingress.ingressclass=traefik-internal"
   #- "--providers.kubernetesIngress.ingressClass=traefik-cert-manager"

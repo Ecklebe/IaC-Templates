@@ -11,6 +11,7 @@ After applying these services and ``IngressRoutes`` the services should be reach
 - http://grafana.localhost/
 - http://prometheus.localhost/
 - http://alertmanager.localhost/
+- http://jaeger.localhost/
 
 ## For the traefik dashboard
 

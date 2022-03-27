@@ -42,3 +42,11 @@ resource "helm_release" "prometheus" {
     data.template_file.kube_stack_prometheus_values.rendered
   ]
 }
+
+resource "helm_release" "jaeger_operator" {
+  chart        = "jaeger-operator"
+  name         = "jaegertracing"
+  namespace    = var.monitoring_namespace
+  repository   = "https://jaegertracing.github.io/helm-charts"
+  force_update = true
+}
