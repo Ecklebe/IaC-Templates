@@ -107,8 +107,8 @@ global:
       ## Ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/#apparmor
       ## Ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/#seccomp
       ## Ref: https://kubernetes.io/docs/concepts/policy/pod-security-policy/#sysctl
-      ##
-      # seccomp.security.alpha.kubernetes.io/allowedProfileNames: '*'
+    ##
+    # seccomp.security.alpha.kubernetes.io/allowedProfileNames: '*'
     # seccomp.security.alpha.kubernetes.io/defaultProfileName: 'docker/default'
     # apparmor.security.beta.kubernetes.io/defaultProfileName: 'runtime/default'
 
@@ -1514,7 +1514,7 @@ prometheusOperator:
   ## This is mutually exclusive with denyNamespaces. Setting this to an empty object will disable the configuration
   ##
   namespaces: { }
-    # releaseNamespace: true
+  # releaseNamespace: true
   # additional:
   # - kube-system
 
@@ -1672,8 +1672,8 @@ prometheusOperator:
     #     nodeSelectorTerms:
     #     - matchExpressions:
     #       - key: kubernetes.io/e2e-az-name
-    #         operator: In
-    #         values:
+  #         operator: In
+  #         values:
   #         - e2e-az1
   #         - e2e-az2
   dnsConfig: { }
@@ -1681,8 +1681,8 @@ prometheusOperator:
     #   - 1.2.3.4
     # searches:
     #   - ns1.svc.cluster-domain.example
-    #   - my.dns.search.suffix
-    # options:
+  #   - my.dns.search.suffix
+  # options:
   #   - name: ndots
   #     value: "2"
   #   - name: edns0
@@ -2019,7 +2019,7 @@ prometheus:
     ## Secret must be manually created in the namespace
     ##
     tls: [ ]
-      # - secretName: prometheus-general-tls
+    # - secretName: prometheus-general-tls
     #   hosts:
     #     - prometheus.example.com
 
@@ -2538,7 +2538,7 @@ prometheus:
     ## Expected values are the secret name and key
     ## Cannot be used with additionalScrapeConfigs
     additionalScrapeConfigsSecret: { }
-      # enabled: false
+    # enabled: false
     # name:
     # key:
 
@@ -2606,8 +2606,8 @@ prometheus:
       # secretProviderClass:
       #   provider: gcp
       #   parameters:
-      #     secrets: |
-      #       - resourceName: "projects/$PROJECT_ID/secrets/testsecret/versions/latest"
+    #     secrets: |
+    #       - resourceName: "projects/$PROJECT_ID/secrets/testsecret/versions/latest"
     #         fileName: "objstore.yaml"
     # objectStorageConfigFile: /var/secrets/object-store.yaml
 
@@ -2773,9 +2773,9 @@ prometheus:
 
     ## Path to client key file
     ##
-    # keyFile: ""
+  # keyFile: ""
 
-    ## Server name used to verify host name
+  ## Server name used to verify host name
   ##
   # serverName: ""
 
@@ -2817,7 +2817,7 @@ prometheus:
     ##
     # matchNames: []
 
-    ## Endpoints of the selected pods to be monitored
-    ## https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#podmetricsendpoint
+  ## Endpoints of the selected pods to be monitored
+  ## https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#podmetricsendpoint
   ##
   # podMetricsEndpoints: []

@@ -37,8 +37,8 @@ deployment:
   # Additional containers (e.g. for metric offloading sidecars)
   additionalContainers: [ ]
     # https://docs.datadoghq.com/developers/dogstatsd/unix_socket/?tab=host
-    # - name: socat-proxy
-    # image: alpine/socat:1.0.5
+  # - name: socat-proxy
+  # image: alpine/socat:1.0.5
   # args: ["-s", "-u", "udp-recv:8125", "unix-sendto:/socket/socket"]
   # volumeMounts:
   #   - name: dsdsocket
@@ -53,8 +53,8 @@ deployment:
     # The "volume-permissions" init container is required if you run into permission issues.
     # Related issue: https://github.com/traefik/traefik/issues/6972
     # - name: volume-permissions
-    #   image: busybox:1.31.1
-    #   command: ["sh", "-c", "chmod -Rv 600 /data/*"]
+  #   image: busybox:1.31.1
+  #   command: ["sh", "-c", "chmod -Rv 600 /data/*"]
   #   volumeMounts:
   #     - name: data
   #       mountPath: /data
@@ -205,7 +205,7 @@ logs:
       headers:
         defaultmode: drop
         names: { }
-          # Examples:
+        # Examples:
         # User-Agent: redact
         # Authorization: drop
         # Content-Type: keep
@@ -469,8 +469,8 @@ serviceAccountAnnotations: { }
 
 resources: { }
   # requests:
-  #   cpu: "100m"
-  #   memory: "50Mi"
+#   cpu: "100m"
+#   memory: "50Mi"
 # limits:
 #   cpu: "300m"
 #   memory: "150Mi"
