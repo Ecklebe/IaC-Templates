@@ -11,3 +11,19 @@ traefik_namespace             = "kube-system"
 grafana_username     = "admin"
 grafana_password     = "grafana~2022"
 monitoring_namespace = "default"
+
+ca_tls_subject = {
+  common_name  = "localhost"
+  organization = "Test Environment for IaC"
+}
+
+signed_tls_subject = {
+  common_name  = "localhost"
+  organization = "Test Environment for IaC"
+}
+
+traefik_admin_username = "traefik-admin"
+traefik_admin_password = "traefik~2022"
+traefik_namespace      = "kube-system"
+
+monitoring_namespace = "default"
