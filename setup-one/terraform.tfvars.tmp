@@ -7,6 +7,8 @@ ingress_gateway_chart_name    = "traefik"
 ingress_gateway_chart_repo    = "https://helm.traefik.io/traefik"
 ingress_gateway_chart_version = "10.14.2"
 traefik_namespace             = "kube-system"
+traefik_admin_username        = "traefik-admin"
+traefik_admin_password        = "traefik~2022"
 
 grafana_username     = "admin"
 grafana_password     = "grafana~2022"
@@ -22,8 +24,3 @@ signed_tls_subject = {
   organization = "Test Environment for IaC"
 }
 
-traefik_admin_username = "traefik-admin"
-traefik_admin_password = "traefik~2022"
-traefik_namespace      = "kube-system"
-
-monitoring_namespace = "default"
