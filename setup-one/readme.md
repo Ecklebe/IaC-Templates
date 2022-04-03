@@ -9,6 +9,7 @@ Prerequisites:
 3. Docker Desktop on Windows installed
 4. Kubernetes inside Docker Desktop active and running
 5. WSL 2 activated in Docker Desktop and set to default on the system.
+6. A Windows operating system if that was until now not clear
 
 ## Create Cluster Basics
 
