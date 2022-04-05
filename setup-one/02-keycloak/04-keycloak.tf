@@ -29,6 +29,7 @@ resource "kubernetes_manifest" "keycloak-instance" {
   }
 }
 
+/*
 resource "kubernetes_manifest" "keycloak-basic-realm" {
   manifest = {
     "apiVersion" = "keycloak.org/v1alpha1"
@@ -54,8 +55,9 @@ resource "kubernetes_manifest" "keycloak-basic-realm" {
     }
   }
 }
+*/
 
-
+/*
 resource "kubernetes_manifest" "keycloak-ingress-route" {
   manifest = {
     "apiVersion" = "traefik.containo.us/v1alpha1"
@@ -84,3 +86,4 @@ resource "kubernetes_manifest" "keycloak-ingress-route" {
     }
   }
 }
+*/
