@@ -3,18 +3,6 @@ variable "kubernetes_config_path" {
   type        = string
 }
 
-# Load and connect to Kubernetes
-provider "kubernetes" {
-  config_path = var.kubernetes_config_path
-}
-
-# Load and connect to Helm
-provider "helm" {
-  kubernetes {
-    config_path = var.kubernetes_config_path
-  }
-}
-
 variable "azure_subscription_id" {
   description = ""
   type        = string

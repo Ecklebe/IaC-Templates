@@ -1,6 +1,28 @@
-azure_subscription_id        = ""
-azure_subscription_tenant_id = ""
-service_principal_appid      = ""
-service_principal_password   = ""
+azure_subscription_id            = ""
+azure_subscription_tenant_id     = ""
+service_principal_appid          = ""
+service_principal_password       = ""
+azure_resource_group_name_prefix = "rg"
+azure_agent_count                = 1
+azure_ssh_public_key             = "~/.ssh/id_rsa.pub"
+azure_dns_prefix                 = "k8stest"
+azure_cluster_name               = "k8stest"
 
-kubernetes_config_path = ""
+# https://docs.microsoft.com/de-de/azure/aks/quotas-skus-regions#restricted-vm-sizes
+
+# cost example 1 - creation possible
+# https://docs.microsoft.com/en-us/azure/virtual-machines/lsv2-series
+#azure_vm_size = "Standard_L8s_v2"
+#azure_resource_group_location = "germanywestcentral"
+
+# example 2 - creation not tested - standard example by the price calculator
+# https://docs.microsoft.com/en-us/azure/virtual-machines/dv3-dsv3-series
+#azure_vm_size = "Standard_D2_v3"
+#azure_resource_group_location = "westeurope"
+
+# example 3 - creation possible
+# https://docs.microsoft.com/en-us/azure/virtual-machines/sizes-b-series-burstable
+azure_vm_size                 = "Standard_B2s"
+azure_resource_group_location = "westeurope"
+
+kubernetes_config_path = "../../kube_config"

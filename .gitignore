@@ -7,3 +7,4 @@
 /**/terraform.tfvars
 /**/plugins.txt
 /**/*.tfplan
+/**/kube_config
