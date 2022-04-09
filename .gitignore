@@ -8,3 +8,4 @@
 /**/plugins.txt
 /**/*.tfplan
 /**/kube_config
+/**/*.info

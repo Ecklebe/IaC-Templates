@@ -7,7 +7,9 @@ Prerequisites:
 1. Terraform executable downloaded and added to the system path
 2. Helm executable downloaded and added to the system path
 3. Docker Desktop on Windows installed
-4. Kubernetes inside Docker Desktop active and running
+4. Kubernetes setup and running
+   1. either in Docker Desktop active and running
+   2. or created as Azure Kubernetes Service (AKS) << here only the creation of the aks is tested
 5. WSL 2 activated in Docker Desktop and set to default on the system.
 6. A Windows operating system if that was until now not clear
 
