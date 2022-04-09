@@ -1,11 +1,6 @@
 # 1 Backend variables
-domain = "localhost"
-
-# For Kubernetes in Docker Desktop (Windows)
-kubernetes_config_path = "C:\\Users\\tobia\\.kube\\config"
-
-# For Azure
-#kubernetes_config_path = "../../kube_config"
+domain                 = "localhost"
+kubernetes_config_path = "../../kube_config"
 
 # 3 Ingress variables
 ingress_gateway_chart_name    = "traefik"
