@@ -3,7 +3,7 @@ resource "kubernetes_namespace" "hotrod" {
     annotations = {
       name = "hotrod"
     }
-    name        = "hotrod"
+    name = "hotrod"
   }
 }
 
@@ -11,7 +11,7 @@ resource "kubernetes_deployment" "hotrod" {
   metadata {
     name      = "hotrod"
     namespace = kubernetes_namespace.hotrod.metadata[0].name
-    labels    = {
+    labels = {
       "app" = "hotrod"
     }
   }
@@ -72,20 +72,20 @@ resource "kubernetes_manifest" "hotrod-ingress-route" {
   manifest = {
     "apiVersion" = "traefik.containo.us/v1alpha1"
     "kind"       = "IngressRoute"
-    "metadata"   = {
+    "metadata" = {
       "name"      = kubernetes_deployment.hotrod.metadata[0].labels.app
       "namespace" = kubernetes_namespace.hotrod.metadata[0].name
     }
-    "spec"       = {
+    "spec" = {
       #"entryPoints" = ["websecure"]
       "entryPoints" = ["web"]
       #"tls" =  {
       #  "secretName" = "traefik-dashboard-cert"
       #}
-      "routes"      = [
+      "routes" = [
         {
-          "match"    = "Host(`hotrod.localhost`)"
-          "kind"     = "Rule"
+          "match" = "Host(`hotrod.localhost`)"
+          "kind"  = "Rule"
           "services" = [
             {
               "name" = kubernetes_service.hotrod.metadata[0].name
