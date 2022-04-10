@@ -1,20 +1,22 @@
 #https://www.keycloak.org/getting-started/getting-started-operator-kubernetes#_install_keycloak_operator_on_kubernetes
 
+#https://www.keycloak.org/docs/latest/server_installation/index.html#_installing-operator
+
 resource "kubernetes_manifest" "keycloak-instance" {
   manifest = {
     "apiVersion" = "keycloak.org/v1alpha1"
     "kind"       = "Keycloak"
-    "metadata"   = {
+    "metadata" = {
       "name"      = "mykeycloak"
       "namespace" = "default"
-      "labels"    = {
+      "labels" = {
         "app" = "mykeycloak"
       }
     }
-    "spec"       = {
+    "spec" = {
       "externalAccess" = {
         "enabled" = "True"
-        #"host" = "keycloak.localhost"
+        "host"    = "keycloak.localhost"
       }
       #"extensions" = [
       #  "https://github.com/aerogear/keycloak-metrics-spi/releases/download/1.0.4/keycloak-metrics-spi-1.0.4.jar"
