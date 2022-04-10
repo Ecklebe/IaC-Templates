@@ -3,7 +3,7 @@ resource "kubernetes_namespace" "httpbin" {
     annotations = {
       name = "httpbin"
     }
-    name        = "httpbin"
+    name = "httpbin"
   }
 }
 
@@ -11,7 +11,7 @@ resource "kubernetes_deployment" "httpbin" {
   metadata {
     name      = "httpbin"
     namespace = kubernetes_namespace.httpbin.metadata[0].name
-    labels    = {
+    labels = {
       "app" = "httpbin"
     }
   }
@@ -63,20 +63,20 @@ resource "kubernetes_manifest" "httpbin-ingress-route" {
   manifest = {
     "apiVersion" = "traefik.containo.us/v1alpha1"
     "kind"       = "IngressRoute"
-    "metadata"   = {
+    "metadata" = {
       "name"      = kubernetes_deployment.httpbin.metadata[0].labels.app
       "namespace" = kubernetes_namespace.httpbin.metadata[0].name
     }
-    "spec"       = {
+    "spec" = {
       #"entryPoints" = ["websecure"]
       "entryPoints" = ["web"]
       #"tls" =  {
       #  "secretName" = "traefik-dashboard-cert"
       #}
-      "routes"      = [
+      "routes" = [
         {
-          "match"    = "Host(`httpbin.localhost`)"
-          "kind"     = "Rule"
+          "match" = "Host(`httpbin.localhost`)"
+          "kind"  = "Rule"
           "services" = [
             {
               "name" = kubernetes_service.httpbin.metadata[0].name
