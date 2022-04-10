@@ -7,7 +7,7 @@ resource "kubernetes_namespace" "whoami" {
     annotations = {
       name = "whoami"
     }
-    name        = "whoami"
+    name = "whoami"
   }
 }
 
@@ -15,7 +15,7 @@ resource "kubernetes_deployment" "whoami" {
   metadata {
     name      = "deployment"
     namespace = kubernetes_namespace.whoami.metadata[0].name
-    labels    = {
+    labels = {
       "app"  = "traefiklabs"
       "name" = "whoami"
     }
@@ -70,14 +70,14 @@ resource "kubernetes_manifest" "whoami-ingress" {
   manifest = {
     "apiVersion" = "networking.k8s.io/v1"
     "kind"       = "Ingress"
-    "metadata"   = {
-      "name"        = "ingress"
-      "namespace"   = kubernetes_namespace.whoami.metadata.0.name
+    "metadata" = {
+      "name"      = "ingress"
+      "namespace" = kubernetes_namespace.whoami.metadata.0.name
       "annotations" = {
         "traefik.ingress.kubernetes.io/router.entrypoints" = "web"
       }
     }
-    "spec"       = {
+    "spec" = {
       "rules" = [
         {
           "host" : "whoami.localhost"
@@ -86,7 +86,7 @@ resource "kubernetes_manifest" "whoami-ingress" {
               {
                 "path"     = "/"
                 "pathType" = "Exact"
-                "backend"  = {
+                "backend" = {
                   service = {
                     "name" = kubernetes_service.whoami.metadata[0].name
                     "port" = {
@@ -98,7 +98,7 @@ resource "kubernetes_manifest" "whoami-ingress" {
               {
                 "path"     = "/bar"
                 "pathType" = "Exact"
-                "backend"  = {
+                "backend" = {
                   service = {
                     "name" = kubernetes_service.whoami.metadata[0].name
                     "port" = {
@@ -110,7 +110,7 @@ resource "kubernetes_manifest" "whoami-ingress" {
               {
                 "path"     = "/foo"
                 "pathType" = "Exact"
-                "backend"  = {
+                "backend" = {
                   service = {
                     "name" = kubernetes_service.whoami.metadata[0].name
                     "port" = {
@@ -129,7 +129,7 @@ resource "kubernetes_manifest" "whoami-ingress" {
               {
                 "path"     = "/"
                 "pathType" = "Exact"
-                "backend"  = {
+                "backend" = {
                   service = {
                     "name" = kubernetes_service.whoami.metadata[0].name
                     "port" = {
@@ -162,11 +162,11 @@ resource "kubernetes_manifest" "whoami-middleware" {
   manifest = {
     "apiVersion" = "traefik.containo.us/v1alpha1"
     "kind"       = "Middleware"
-    "metadata"   = {
+    "metadata" = {
       "name"      = "middleware"
       "namespace" = kubernetes_namespace.whoami.metadata[0].name
     }
-    "spec"       = {
+    "spec" = {
       "basicAuth" = {
         "secret" = kubernetes_secret.whoami-auth.metadata[0].name
       }
@@ -178,27 +178,27 @@ resource "kubernetes_manifest" "whoami-ingress-route" {
   manifest = {
     "apiVersion" = "traefik.containo.us/v1alpha1"
     "kind"       = "IngressRoute"
-    "metadata"   = {
+    "metadata" = {
       "name"      = "ingress-route"
       "namespace" = kubernetes_namespace.whoami.metadata[0].name
     }
-    "spec"       = {
+    "spec" = {
       #"entryPoints" = ["websecure"]
       "entryPoints" = ["web"]
       #"tls" =  {
       #  "secretName" = "traefik-dashboard-cert"
       #}
-      "routes"      = [
+      "routes" = [
         {
-          "match"       = "Host(`auth.whoami.localhost`)"
-          "kind"        = "Rule"
+          "match" = "Host(`auth.whoami.localhost`)"
+          "kind"  = "Rule"
           "middlewares" = [
             {
               "name"      = kubernetes_manifest.whoami-middleware.manifest.metadata.name
               "namespace" = kubernetes_namespace.whoami.metadata[0].name
             }
           ]
-          "services"    = [
+          "services" = [
             {
               "name" = kubernetes_service.whoami.metadata[0].name
               "port" = kubernetes_service.whoami.spec[0].port[0].port
