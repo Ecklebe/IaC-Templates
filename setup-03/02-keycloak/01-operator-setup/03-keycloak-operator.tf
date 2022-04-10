@@ -2,11 +2,11 @@ resource "kubernetes_manifest" "keycloak-operatorgroup" {
   manifest = {
     "apiVersion" = "operators.coreos.com/v1"
     "kind"       = "OperatorGroup"
-    "metadata"   = {
+    "metadata" = {
       "name"      = "operatorgroup"
       "namespace" = "default"
     }
-    "spec"       = {
+    "spec" = {
       "targetNamespaces" = ["default"]
     }
   }
@@ -16,11 +16,11 @@ resource "kubernetes_manifest" "keycloak-subscription" {
   manifest = {
     "apiVersion" = "operators.coreos.com/v1alpha1"
     "kind"       = "Subscription"
-    "metadata"   = {
+    "metadata" = {
       "name"      = "keycloak-operator"
       "namespace" = "default"
     }
-    "spec"       = {
+    "spec" = {
       "channel"         = "alpha"
       "name"            = "keycloak-operator"
       "source"          = "operatorhubio-catalog"
