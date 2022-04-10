@@ -49,3 +49,10 @@ Sometimes it is needed to debug some parts more. In these cases the following tw
 
 - HELM_DEBUG=1
 - TF_LOG=TRACE
+
+## Troubleshooting
+
+If the apply fails
+with ``x509: certificate signed by unknown authority (possibly because of "crypto/rsa: verification error" while trying to verify candidate authority certificate "kubernetes")``
+then check if your copied kube config is up-to-date. It can be that after a update of Docker Desktop this error will
+apear.
