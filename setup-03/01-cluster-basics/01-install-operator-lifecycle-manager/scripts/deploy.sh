@@ -10,6 +10,3 @@ curl -L "https://github.com/operator-framework/operator-lifecycle-manager/releas
 chmod +x "${SCRIPT_DIR}/install.sh"
 "${SCRIPT_DIR}/install.sh" "${OLM_VERSION}"
 rm "${SCRIPT_DIR}/install.sh"
-exit 0
-
-curl -L "https://operatorhub.io/install/keycloak-operator.yaml" -o "keycloak-operator.yaml"
