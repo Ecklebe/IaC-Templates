@@ -1,2 +1,0 @@
-(terraform -chdir=.\01-install-operator-lifecycle-manager\ plan -destroy -var-file=..\..\terraform.tfvars -out=main.destroy.tfplan -input=false -compact-warnings) ^
-&& (terraform -chdir=.\01-install-operator-lifecycle-manager\ apply -auto-approve -input=false -compact-warnings "main.destroy.tfplan")
