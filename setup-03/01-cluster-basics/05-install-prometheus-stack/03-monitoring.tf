@@ -5,7 +5,7 @@ https://getbetterdevops.io/setup-prometheus-and-grafana-on-kubernetes/
 
 */
 
-variable "monitoring_namespace" {
+variable "metrics_namespace" {
   description = "The namespace to create and where to deploy resources."
   type        = string
 }
@@ -19,6 +19,15 @@ variable "grafana_password" {
   type        = string
 }
 
+resource "kubernetes_namespace" "metrics_namespace" {
+  metadata {
+    annotations = {
+      name = var.metrics_namespace
+    }
+    name = var.metrics_namespace
+  }
+}
+
 data "template_file" "kube_stack_prometheus_values" {
   template = file("./templates/monitoring-values.yml")
 
@@ -30,11 +39,9 @@ data "template_file" "kube_stack_prometheus_values" {
 }
 
 resource "helm_release" "prometheus" {
-  depends_on = [helm_release.traefik_helm_release]
-
   chart        = "kube-prometheus-stack"
   name         = "prometheus"
-  namespace    = var.monitoring_namespace
+  namespace    = var.metrics_namespace
   repository   = "https://prometheus-community.github.io/helm-charts"
   force_update = true
 
