@@ -84,6 +84,22 @@ resource "kubernetes_service" "registry" {
   }
 }
 
+resource "kubernetes_manifest" "registry-middleware-strip-prefix" {
+  manifest = {
+    "apiVersion" = "traefik.containo.us/v1alpha1"
+    "kind"       = "Middleware"
+    "metadata"   = {
+      "name"      = "registry-middleware-strip-prefix"
+      "namespace" = kubernetes_namespace.registry.metadata[0].name
+    }
+    "spec" = {
+      "stripPrefix" = {
+        "prefixes" = ["/registry"]
+      }
+    }
+  }
+}
+
 resource "kubernetes_manifest" "registry-chain-middleware" {
   manifest = {
     "apiVersion" = "traefik.containo.us/v1alpha1"
@@ -92,44 +108,19 @@ resource "kubernetes_manifest" "registry-chain-middleware" {
       "name"      = "chain-middleware"
       "namespace" = kubernetes_namespace.registry.metadata[0].name
     }
-    "spec"       = {
+    "spec" = {
       "chain" = {
         "middlewares" = [
           {
-            "name"      = kubernetes_manifest.traefik-redirect-middleware.manifest.metadata.name
-            "namespace" = var.traefik_namespace
+            "name"      = "kube-system-redirect-middleware@kubernetescrd"
+            "namespace" = "kube-system"
+          },
+          {
+            "name"      = kubernetes_manifest.registry-middleware-strip-prefix.manifest.metadata.name
+            "namespace" = kubernetes_namespace.registry.metadata[0].name
           }
         ]
       }
-    }
-  }
-}
-
-resource "kubernetes_manifest" "registry-ingress-route-secure" {
-  manifest = {
-    "apiVersion" = "traefik.containo.us/v1alpha1"
-    "kind"       = "IngressRoute"
-    "metadata"   = {
-      "name"      = "ingress-route-secure"
-      "namespace" = kubernetes_namespace.registry.metadata[0].name
-    }
-    "spec"       = {
-      "entryPoints" = ["websecure"]
-      "tls"         = {
-        "secretName" = kubernetes_secret.signed-tls-2.metadata[0].name
-      }
-      "routes"      = [
-        {
-          "match"    = "Host(`registry.localhost`)"
-          "kind"     = "Rule"
-          "services" = [
-            {
-              "name" = kubernetes_service.registry.metadata[0].name
-              "port" = kubernetes_service.registry.spec[0].port[0].port
-            }
-          ]
-        }
-      ]
     }
   }
 }
@@ -143,10 +134,10 @@ resource "kubernetes_manifest" "registry-ingress-route" {
       "namespace" = kubernetes_namespace.registry.metadata[0].name
     }
     "spec"       = {
-      "entryPoints" = ["web"]
+      "entryPoints" = ["web", "websecure"]
       "routes"      = [
         {
-          "match"       = "Host(`registry.localhost`)"
+          "match"       = "Host(`registry.${var.domain}`) || (Host(`${var.domain}`) && PathPrefix(`/registry`))"
           "kind"        = "Rule"
           "middlewares" = [
             {
