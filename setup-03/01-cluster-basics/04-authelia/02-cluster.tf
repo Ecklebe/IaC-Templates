@@ -7,3 +7,10 @@ variable "kubernetes_config_path" {
 provider "kubernetes" {
   config_path = var.kubernetes_config_path
 }
+
+# Load and connect to Helm
+provider "helm" {
+  kubernetes {
+    config_path = var.kubernetes_config_path
+  }
+}

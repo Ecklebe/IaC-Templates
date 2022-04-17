@@ -33,7 +33,7 @@ resource "kubernetes_deployment" "hotrod" {
           name              = "hotrod"
           image             = "docker.io/jaegertracing/example-hotrod"
           image_pull_policy = "Always"
-          args              = ["all", "-j", "http://jaeger.localhost"]
+          args              = ["all", "-j", "http://jaeger.${var.domain}"]
           env {
             name  = "JAEGER_AGENT_HOST"
             value = "jaeger-agent.default.svc"
@@ -68,24 +68,42 @@ resource "kubernetes_service" "hotrod" {
   }
 }
 
+resource "kubernetes_manifest" "hotrod-middleware" {
+  manifest = {
+    "apiVersion" = "traefik.containo.us/v1alpha1"
+    "kind"       = "Middleware"
+    "metadata"   = {
+      "name"      = "hotrod-middleware"
+      "namespace" = kubernetes_namespace.hotrod.metadata[0].name
+    }
+    "spec" = {
+      "stripPrefix" = {
+        "prefixes" = ["/hotrod"]
+      }
+    }
+  }
+}
+
 resource "kubernetes_manifest" "hotrod-ingress-route" {
   manifest = {
     "apiVersion" = "traefik.containo.us/v1alpha1"
     "kind"       = "IngressRoute"
-    "metadata" = {
+    "metadata"   = {
       "name"      = kubernetes_deployment.hotrod.metadata[0].labels.app
       "namespace" = kubernetes_namespace.hotrod.metadata[0].name
     }
     "spec" = {
-      #"entryPoints" = ["websecure"]
-      "entryPoints" = ["web"]
-      #"tls" =  {
-      #  "secretName" = "traefik-dashboard-cert"
-      #}
-      "routes" = [
+      "entryPoints" = ["websecure"]
+      "routes"      = [
         {
-          "match" = "Host(`hotrod.localhost`)"
-          "kind"  = "Rule"
+          "match"       = "Host(`hotrod.${var.domain}`) || (Host(`${var.domain}`) && PathPrefix(`/hotrod`))"
+          "kind"        = "Rule"
+          "middlewares" = [
+            {
+              "name"      = kubernetes_manifest.hotrod-middleware.manifest.metadata.name
+              "namespace" = kubernetes_namespace.hotrod.metadata[0].name
+            }
+          ]
           "services" = [
             {
               "name" = kubernetes_service.hotrod.metadata[0].name

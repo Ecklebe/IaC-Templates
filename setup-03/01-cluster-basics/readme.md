@@ -24,6 +24,11 @@ shortly the urls as list to access them later:
 - http://alertmanager.localhost/
 - http://jaeger.localhost/
 
+### Installed User Account
+
+User:     tobias
+Password: cluster-development-2022
+
 ### Traefik
 
 #### Dashboard
@@ -38,10 +43,7 @@ kubectl port-forward service/traefik-dashboard -n kube-system 9000:9000
 The dashboard should be then reachable with: ``http://127.0.0.1:9000/dashboard``
 
 After the ingress route is applied the dashboard will be reachable under:
-http://traefik.localhost/dashboard/#/ with the credentials below:
-
-- username = traefik-admin
-- password = traefik~2022
+http://traefik.localhost/dashboard/#/ with the credentials shown at installed user account.
 
 #### Metrics
 

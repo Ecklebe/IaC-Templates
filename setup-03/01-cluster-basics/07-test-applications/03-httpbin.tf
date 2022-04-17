@@ -59,24 +59,42 @@ resource "kubernetes_service" "httpbin" {
   }
 }
 
+resource "kubernetes_manifest" "httpbin-middleware" {
+  manifest = {
+    "apiVersion" = "traefik.containo.us/v1alpha1"
+    "kind"       = "Middleware"
+    "metadata"   = {
+      "name"      = "httpbin-middleware"
+      "namespace" = kubernetes_namespace.httpbin.metadata[0].name
+    }
+    "spec" = {
+      "stripPrefix" = {
+        "prefixes" = ["/httpbin"]
+      }
+    }
+  }
+}
+
 resource "kubernetes_manifest" "httpbin-ingress-route" {
   manifest = {
     "apiVersion" = "traefik.containo.us/v1alpha1"
     "kind"       = "IngressRoute"
-    "metadata" = {
+    "metadata"   = {
       "name"      = kubernetes_deployment.httpbin.metadata[0].labels.app
       "namespace" = kubernetes_namespace.httpbin.metadata[0].name
     }
     "spec" = {
-      #"entryPoints" = ["websecure"]
-      "entryPoints" = ["web"]
-      #"tls" =  {
-      #  "secretName" = "traefik-dashboard-cert"
-      #}
-      "routes" = [
+      "entryPoints" = ["websecure", "web"]
+      "routes"      = [
         {
-          "match" = "Host(`httpbin.localhost`)"
-          "kind"  = "Rule"
+          "match"       = "Host(`httpbin.${var.domain}`) || (Host(`${var.domain}`) && PathPrefix(`/httpbin`))"
+          "kind"        = "Rule"
+          "middlewares" = [
+            {
+              "name"      = kubernetes_manifest.httpbin-middleware.manifest.metadata.name
+              "namespace" = kubernetes_namespace.httpbin.metadata[0].name
+            }
+          ]
           "services" = [
             {
               "name" = kubernetes_service.httpbin.metadata[0].name

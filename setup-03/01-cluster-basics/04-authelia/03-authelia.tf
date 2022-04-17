@@ -2,6 +2,10 @@
 https://github.com/DavidIlie/kubernetes-setup
 https://medium.com/@TCheronneau/sso-with-traefik-and-kubernetes-d008f9a1328a
 */
+variable "domain" {
+  description = "Domain to use"
+  type        = string
+}
 
 resource "kubernetes_namespace" "auth" {
   metadata {
@@ -9,13 +13,16 @@ resource "kubernetes_namespace" "auth" {
   }
 }
 
-resource "kubernetes_secret" "authelia_secret" {
+resource "kubernetes_secret" "authelia_secret_users" {
   metadata {
-    name      = "auth"
+    name      = "authelia-users"
     namespace = kubernetes_namespace.auth.metadata[0].name
+    labels    = {
+      "sensitive" = "true"
+    }
   }
   data = {
-    duo_key = "UXE1WmM4S0pldnl6eHRwQ3psTGpDbFplOXFueUVyWEZhYjE0Z01IRHN0RT0K"
+    "users_database.yml" = file("templates/users_database.yml")
   }
 }
 
@@ -26,25 +33,11 @@ resource "helm_release" "authelia_helm_release" {
   version      = "0.8.22"
   namespace    = kubernetes_namespace.auth.metadata[0].name
   force_update = true
-  values = [
+  values       = [
     file("templates/authelia-values.local.yaml")
   ]
-}
-
-/*
-resource "kubernetes_manifest" "authelia-redirect-middleware" {
-  manifest = {
-    "apiVersion" = "traefik.containo.us/v1alpha1"
-    "kind"       = "Middleware"
-    "metadata"   = {
-      "name"      = "auth"
-      "namespace" = "kube-system"
-    }
-    "spec"       = {
-      "forwardAuth" = {
-        "address"    = "http://authelia.auth.svc:8080/api/verify?rd=https://auth.localhost"
-      }
-    }
+  set {
+    name  = "domain"
+    value = var.domain
   }
 }
-*/

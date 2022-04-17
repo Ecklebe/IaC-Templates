@@ -79,14 +79,17 @@ resource "kubernetes_manifest" "traefik-dashboard-ingress-route" {
     }
     "spec" = {
       "entryPoints" = ["websecure"]
-      "routes"      = [
+      "tls"         = {
+        "secretName" = kubernetes_secret.signed-tls-2.metadata[0].name
+      }
+      "routes" = [
         {
           "match"       = "(Host(`traefik.${var.domain}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))) || (Host(`${var.domain}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`)))"
           "kind"        = "Rule"
           "middlewares" = [
             {
-              "name"      = kubernetes_manifest.traefik-dashboard-middleware.manifest.metadata.name
-              "namespace" = var.traefik_namespace
+              "name"      = "auth-forwardauth-authelia@kubernetescrd"
+              "namespace" = "auth"
             }
           ]
           "services" = [

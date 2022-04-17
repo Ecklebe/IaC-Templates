@@ -74,19 +74,19 @@ resource "kubernetes_manifest" "whoami-ingress" {
       "name"      = "ingress"
       "namespace" = kubernetes_namespace.whoami.metadata.0.name
       "annotations" = {
-        "traefik.ingress.kubernetes.io/router.entrypoints" = "web"
+        "traefik.ingress.kubernetes.io/router.entrypoints" = "websecure"
       }
     }
     "spec" = {
       "rules" = [
         {
-          "host" : "whoami.localhost"
+          "host" : "whoami.${var.domain}"
           "http" = {
             "paths" = [
               {
                 "path"     = "/"
                 "pathType" = "Exact"
-                "backend" = {
+                "backend"  = {
                   service = {
                     "name" = kubernetes_service.whoami.metadata[0].name
                     "port" = {
@@ -123,13 +123,32 @@ resource "kubernetes_manifest" "whoami-ingress" {
           }
         },
         {
-          "host" : "foo.whoami.localhost"
+          "host" : "foo.whoami.${var.domain}"
           "http" = {
             "paths" = [
               {
                 "path"     = "/"
                 "pathType" = "Exact"
-                "backend" = {
+                "backend"  = {
+                  service = {
+                    "name" = kubernetes_service.whoami.metadata[0].name
+                    "port" = {
+                      "number" = kubernetes_service.whoami.spec[0].port[0].port
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "host" : "${var.domain}"
+          "http" = {
+            "paths" = [
+              {
+                "path"     = "/whoami"
+                "pathType" = "Exact"
+                "backend"  = {
                   service = {
                     "name" = kubernetes_service.whoami.metadata[0].name
                     "port" = {
@@ -163,7 +182,7 @@ resource "kubernetes_manifest" "whoami-middleware" {
     "apiVersion" = "traefik.containo.us/v1alpha1"
     "kind"       = "Middleware"
     "metadata" = {
-      "name"      = "middleware"
+      "name"      = "whoami-middleware"
       "namespace" = kubernetes_namespace.whoami.metadata[0].name
     }
     "spec" = {
@@ -183,19 +202,47 @@ resource "kubernetes_manifest" "whoami-ingress-route" {
       "namespace" = kubernetes_namespace.whoami.metadata[0].name
     }
     "spec" = {
-      #"entryPoints" = ["websecure"]
-      "entryPoints" = ["web"]
-      #"tls" =  {
-      #  "secretName" = "traefik-dashboard-cert"
-      #}
-      "routes" = [
+      "entryPoints" = ["websecure"]
+      "routes"      = [
         {
-          "match" = "Host(`auth.whoami.localhost`)"
-          "kind"  = "Rule"
+          "match"       = "Host(`${var.domain}`) && PathPrefix(`/whoami/auth`)"
+          "kind"        = "Rule"
           "middlewares" = [
             {
               "name"      = kubernetes_manifest.whoami-middleware.manifest.metadata.name
               "namespace" = kubernetes_namespace.whoami.metadata[0].name
+            }
+          ]
+          "services" = [
+            {
+              "name" = kubernetes_service.whoami.metadata[0].name
+              "port" = kubernetes_service.whoami.spec[0].port[0].port
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
+
+resource "kubernetes_manifest" "whoami-ingress-route-authelia" {
+  manifest = {
+    "apiVersion" = "traefik.containo.us/v1alpha1"
+    "kind"       = "IngressRoute"
+    "metadata"   = {
+      "name"      = "ingress-route-authelia"
+      "namespace" = kubernetes_namespace.whoami.metadata[0].name
+    }
+    "spec" = {
+      "entryPoints" = ["websecure"]
+      "routes"      = [
+        {
+          "match"       = "Host(`${var.domain}`) && PathPrefix(`/whoami/authelia`)"
+          "kind"        = "Rule"
+          "middlewares" = [
+            {
+              "name"      = "auth-forwardauth-authelia@kubernetescrd"
+              "namespace" = "auth"
             }
           ]
           "services" = [

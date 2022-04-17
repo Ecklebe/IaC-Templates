@@ -1,0 +1,9 @@
+users:
+  tobias:
+    displayname: "Tobias"
+    # docker run --rm authelia/authelia:latest authelia hash-password cluster-development-2022
+    password: "$argon2id$v=19$m=65536,t=1,p=8$VnlnWithYTZsUUZJK1piTg$P8VLWJHftR24CaN3Ov9gHwV2xU8hIE+RmZyy0655UFU"
+    email: you@cluster.local
+    groups:
+      - admins
+      - dev
