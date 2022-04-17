@@ -129,7 +129,7 @@ resource "tls_cert_request" "cert" {
   key_algorithm   = element(concat(tls_private_key.cert.*.algorithm, [""]), 0)
   private_key_pem = element(concat(tls_private_key.cert.*.private_key_pem, [""]), 0)
 
-  dns_names    = ["localhost", "registry.localhost", "traefik.localhost", "whoami.localhost"]
+  dns_names    = [var.domain]
   ip_addresses = ["127.0.0.1"]
 
   subject {

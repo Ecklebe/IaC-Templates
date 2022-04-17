@@ -20,10 +20,6 @@ variable "ingress_gateway_chart_version" {
   type        = string
   description = "Ingress Gateway Helm repository version."
 }
-variable "domain" {
-  description = "Path to the kubernetes config"
-  type        = string
-}
 variable "traefik_namespace" {
   description = "Name of the namespace where Traefik will be located"
   type        = string
@@ -37,6 +33,7 @@ resource "helm_release" "traefik_helm_release" {
   version      = var.ingress_gateway_chart_version
   namespace    = var.traefik_namespace
   force_update = true
+  timeout      = 600
   values       = [
     file("templates/traefik-values.yml")
   ]
