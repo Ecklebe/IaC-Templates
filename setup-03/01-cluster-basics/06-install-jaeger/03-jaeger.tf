@@ -11,6 +11,7 @@ resource "kubernetes_namespace" "tracing_namespace" {
   }
 }
 
+#https://www.jaegertracing.io/docs/1.33/operator/
 resource "kubernetes_manifest" "jaeger-instance" {
   manifest = {
     "apiVersion" = "jaegertracing.io/v1"
@@ -19,20 +20,13 @@ resource "kubernetes_manifest" "jaeger-instance" {
       "name"      = "jaeger"
       "namespace" = var.tracing_namespace
     }
-  }
-}
-
-resource "kubernetes_manifest" "jaeger-middleware-strip-prefix" {
-  manifest = {
-    "apiVersion" = "traefik.containo.us/v1alpha1"
-    "kind"       = "Middleware"
-    "metadata"   = {
-      "name"      = "jaeger-middleware-strip-prefix"
-      "namespace" = var.tracing_namespace
-    }
     "spec" = {
-      "stripPrefix" = {
-        "prefixes" = ["/jaeger"]
+      "allInOne" = {
+        "options" = {
+          "query" = {
+            "base-path" = "/jaeger"
+          }
+        }
       }
     }
   }
@@ -50,14 +44,14 @@ resource "kubernetes_manifest" "jaeger-dashboard-ingress-route" {
       "entryPoints" = ["websecure", "web"]
       "routes"      = [
         {
-          "match"       = "Host(`jaeger.${var.domain}`) || (Host(`${var.domain}`) && PathPrefix(`/jaeger`))"
-          "kind"        = "Rule"
-          "middlewares" = [
-            {
-              "name"      = kubernetes_manifest.jaeger-middleware-strip-prefix.manifest.metadata.name
-              "namespace" = var.tracing_namespace
-            }
-          ]
+          "match"    = "Host(`${var.domain}`) && PathPrefix(`/jaeger`)"
+          "kind"     = "Rule"
+          #"middlewares" = [
+          #  {
+          #    "name"      = "auth-forwardauth-authelia@kubernetescrd"
+          #    "namespace" = "auth"
+          #  }
+          #]
           "services" = [
             {
               "name" = "jaeger-query"
