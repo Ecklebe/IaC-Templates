@@ -3,7 +3,7 @@ https://traefik.io/blog/capture-traefik-metrics-for-apps-on-kubernetes-with-prom
 https://community.traefik.io/t/capture-traefik-metrics-for-apps-on-kubernetes-with-prometheus/9811
 */
 
-variable "monitoring_namespace" {
+variable "metrics_namespace" {
   type = string
 }
 
@@ -18,7 +18,7 @@ resource "kubernetes_manifest" "traefik-metrics-service-monitor" {
     "kind"       = "ServiceMonitor"
     "metadata"   = {
       "name"      = "traefik-metrics-service-monitor"
-      "namespace" = var.monitoring_namespace
+      "namespace" = var.metrics_namespace
       "labels"    = {
         "app"     = "traefik"
         "release" = "prometheus"
@@ -99,14 +99,14 @@ resource "kubernetes_manifest" "traefik-prometheus-rule" {
     "metadata"   = {
       "annotations" = {
         "meta.helm.sh/release-name"      = "prometheus"
-        "meta.helm.sh/release-namespace" = var.monitoring_namespace
+        "meta.helm.sh/release-namespace" = var.metrics_namespace
       }
       "labels"      = {
         "app"     = "kube-prometheus-stack-prometheus"
         "release" = "prometheus"
       }
-      "name"        = "traefik-alert-rules"
-      "namespace"   = var.monitoring_namespace
+      "name"      = "traefik-alert-rules"
+      "namespace" = var.metrics_namespace
     }
     "spec"       = {
       "groups" = [
