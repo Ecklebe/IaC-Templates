@@ -33,7 +33,7 @@ resource "kubernetes_deployment" "hotrod" {
           name              = "hotrod"
           image             = "docker.io/jaegertracing/example-hotrod"
           image_pull_policy = "Always"
-          args              = ["all", "-j", "http://jaeger.${var.domain}"]
+          args              = ["all", "-j", "http://${var.domain}/jaeger"]
           env {
             name  = "JAEGER_AGENT_HOST"
             value = "jaeger-agent.default.svc"
