@@ -1,0 +1,23 @@
+version: '3.4'
+services:
+  dev_env:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    volumes:
+      # So that we can run docker can from inside the dev env container
+      # https://devopscube.com/run-docker-in-docker/
+      # https://hub.docker.com/_/docker
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${WORKSPACE}:/workspace
+    working_dir: /workspace
+    user: root
+    networks:
+      - iac
+    entrypoint: >-
+      bash -c "echo This is our IaC development environment
+      && /bin/bash"
+
+networks:
+  iac:
+    driver: bridge
