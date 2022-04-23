@@ -17,16 +17,17 @@ There are different ways to apply CRD(s) and to extend so the kubernetes cluster
 With the basic cluster setup come some applications that are in the following described in some more details. Now
 shortly the urls as list to access them later:
 
-- http://traefik.localhost/dashboard/#/
-- http://registry.localhost/v2/_catalog
-- http://grafana.localhost/
-- http://prometheus.localhost/
-- http://alertmanager.localhost/
-- http://jaeger.localhost/
+- http://cluster.local/dashboard/#/
+- http://registry.cluster.local/v2/_catalog
+- http://grafana.cluster.local/
+- http://prometheus.cluster.local/
+- http://alertmanager.cluster.local/
+- http://cluster.local/jaeger
 
 ### Installed User Account
 
 User:     tobias
+
 Password: cluster-development-2022
 
 ### Traefik
@@ -43,7 +44,7 @@ kubectl port-forward service/traefik-dashboard -n kube-system 9000:9000
 The dashboard should be then reachable with: ``http://127.0.0.1:9000/dashboard``
 
 After the ingress route is applied the dashboard will be reachable under:
-http://traefik.localhost/dashboard/#/ with the credentials shown at installed user account.
+http://cluster.local/dashboard/#/ with the credentials shown at installed user account.
 
 #### Metrics
 
@@ -94,7 +95,7 @@ max(rate(traefik_service_requests_total[1m])) by (exported_service)
 ##### Adjust the hosts file
 
 For the docker daemon to resolve the hosts file needs to be extended with a entry that is pointing
-to ``registry.localhost``. On Windows the host file is located in ``C:\Windows\System32\drivers\etc\hosts``.
+to ``registry.cluster.local``. On Windows the host file is located in ``C:\Windows\System32\drivers\etc\hosts``.
 
 ##### Adjust the docker daemon config
 
@@ -111,7 +112,7 @@ the additional parameter ``insecure-registries`` like in the example below:
   },
   "debug": true,
   "insecure-registries": [
-    "registry.localhost"
+    "registry.cluster.local"
   ],
   "experimental": false,
   "features": {
@@ -124,6 +125,25 @@ the additional parameter ``insecure-registries`` like in the example below:
 
 ```console
 docker pull traefik/whoami
-docker tag traefik/whoami registry.localhost/traefik/whoami
-docker push registry.localhost/traefik/whoami
+docker tag traefik/whoami registry.cluster.local/traefik/whoami
+docker push registry.cluster.local/traefik/whoami
+
+docker tag traefik/whoami cluster.local/registry/traefik/whoami
+docker push cluster.local/registry/traefik/whoami
 ```
+
+##### Debug the docker registry
+
+````
+wsl 
+````
+
+##### Docker registry commands
+
+https://docs.docker.com/registry/spec/api/#detail
+
+````
+https://cluster.local/registry/v2/traefik/whoami/tags/list
+
+https://cluster.local/registry/v2/traefik/whoami/manifests/latest
+````
