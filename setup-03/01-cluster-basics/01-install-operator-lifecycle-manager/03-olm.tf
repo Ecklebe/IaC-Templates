@@ -9,11 +9,11 @@ resource "null_resource" "operator_lifecycle_manager" {
   }
 
   provisioner "local-exec" {
-    command = "wsl ${path.module}/scripts/deploy.sh ${self.triggers.OLM_VERSION}"
+    command = "${path.module}/scripts/deploy.sh ${self.triggers.OLM_VERSION}"
   }
 
   provisioner "local-exec" {
     when    = destroy
-    command = "wsl ${path.module}/scripts/destroy.sh ${self.triggers.OLM_VERSION}"
+    command = "${path.module}/scripts/destroy.sh ${self.triggers.OLM_VERSION}"
   }
 }
