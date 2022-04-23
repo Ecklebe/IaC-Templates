@@ -455,7 +455,7 @@ configMap:
 
   log:
     ## Level of verbosity for logs: info, debug, trace.
-    level: trace
+    level: info
 
     ## Format the logs are written as: json, text.
     format: text
