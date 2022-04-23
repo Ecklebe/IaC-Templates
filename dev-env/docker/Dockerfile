@@ -8,4 +8,5 @@ RUN apt-get update \
     && /setup/03_install_terraform.sh \
     && /setup/04_install_azure_cli.sh \
     && /setup/05_install_kubectl.sh \
+    && /setup/06_install_network_tools.sh \
     && apt-get autoremove -y

@@ -4,6 +4,10 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile
+    environment:
+      # set the default kube config of this project to the defined path
+      # https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/#linux-1
+      KUBECONFIG: /workspace/setup-03/kube_config
     volumes:
       # So that we can run docker can from inside the dev env container
       # https://devopscube.com/run-docker-in-docker/
