@@ -9,4 +9,6 @@ RUN apt-get update \
     && /setup/04_install_azure_cli.sh \
     && /setup/05_install_kubectl.sh \
     && /setup/06_install_network_tools.sh \
-    && apt-get autoremove -y
+    && /setup/07_install_helm.sh \
+    && apt-get autoremove -y \
+    && rm -rf /var/lib/apt/lists/*
