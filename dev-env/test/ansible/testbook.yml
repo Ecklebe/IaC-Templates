@@ -1,5 +1,5 @@
 - name: testing ansible
-  hosts: localhost
+  hosts: all
   tasks:
     - name: Echo inventory hostname
       debug:

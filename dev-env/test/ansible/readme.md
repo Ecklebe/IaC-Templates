@@ -2,13 +2,12 @@
 
 Run the command:
 
-``ansible-playbook testbook.yml --connection=local``
+``ansible-playbook testbook.yml --connection=local -i inventory.ini``
 
 The output should be similar to:
 
 ````shell
-root@f4f129cb3128:/workspace/dev-env/test/ansible# ansible-playbook testbook.yml --connection=local
-[WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+root@f4f129cb3128:/workspace/dev-env/test/ansible# ansible-playbook testbook.yml --connection=local -i inventory.ini
 
 PLAY [testing ansible] *********************************************************************************************************************************
 
@@ -17,7 +16,7 @@ ok: [localhost]
 
 TASK [Echo inventory hostname] *************************************************************************************************************************
 ok: [localhost] => {
-    "msg": "System host name is: localhost "
+    "msg": "System host name is: localhost"
 }
 
 PLAY RECAP *********************************************************************************************************************************************
