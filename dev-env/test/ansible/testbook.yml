@@ -1,0 +1,6 @@
+- name: testing ansible
+  hosts: localhost
+  tasks:
+    - name: Echo inventory hostname
+      debug:
+        msg: "System host name is: {{ inventory_hostname }}"
