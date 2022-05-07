@@ -2,6 +2,9 @@
 - hosts: all
   become: true
   tasks:
+
+    # This section common packages
+    # -----------------------------------------------------------------------------
     - name: Install packages that allow apt to be used over HTTPS
       apt:
         name: "{{ packages }}"
@@ -14,6 +17,50 @@
           - curl
           - gnupg-agent
           - software-properties-common
+          - etcd-client
+          - net-tools
+
+    # This section installs set container runtime containerd
+    # https://kubernetes.io/docs/setup/production-environment/container-runtimes/#containerd
+    # -----------------------------------------------------------------------------
+    - name: set overlay in /etc/modules-load.d/containerd.conf
+      lineinfile:
+        path: /etc/modules-load.d/containerd.conf
+        line: overlay
+        create: yes
+
+    - name: set br_netfilter in /etc/modules-load.d/containerd.conf
+      lineinfile:
+        path: /etc/modules-load.d/containerd.conf
+        line: br_netfilter
+        create: yes
+
+    - name: modprobe
+      command: "{{ item }}"
+      with_items:
+        - modprobe overlay
+        - modprobe br_netfilter
+
+    - name: set net.bridge.bridge-nf-call-iptables in /etc/sysctl.d/99-kubernetes-cri.conf
+      lineinfile:
+        path: /etc/sysctl.d/99-kubernetes-cri.conf
+        line: net.bridge.bridge-nf-call-iptables = 1
+        create: yes
+
+    - name: set net.ipv4.ip_forward in /etc/sysctl.d/99-kubernetes-cri.conf
+      lineinfile:
+        path: /etc/sysctl.d/99-kubernetes-cri.conf
+        line: net.ipv4.ip_forward = 1
+        create: yes
+
+    - name: set net.bridge.bridge-nf-call-ip6tables in /etc/sysctl.d/99-kubernetes-cri.conf
+      lineinfile:
+        path: /etc/sysctl.d/99-kubernetes-cri.conf
+        line: net.bridge.bridge-nf-call-ip6tables = 1
+        create: yes
+
+    - name: sysctl --system
+      shell: sysctl --system
 
     - name: Add an apt signing key for Docker
       apt_key:
@@ -22,27 +69,43 @@
 
     - name: Add apt repository for stable version
       apt_repository:
-        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
+        repo: deb [arch={{ arch }}] https://download.docker.com/linux/ubuntu focal stable
         state: present
 
-    - name: Install docker and its dependecies
-      apt:
-        name: "{{ packages }}"
-        state: present
-        update_cache: yes
-      vars:
-        packages:
-          - docker-ce
-          - docker-ce-cli
-          - containerd.io
-      notify:
-        - docker status
+    - name: Install containerd
+      command: "{{ item }}"
+      with_items:
+        - wget -P /tmp/downloads/containerd https://github.com/containerd/containerd/releases/download/v{{ containerd_version }}/containerd-{{ containerd_version }}-{{ os }}-{{ arch }}.tar.gz
+        - tar Cxzvf /usr/local /tmp/downloads/containerd/containerd-{{ containerd_version }}-{{ os }}-{{ arch }}.tar.gz
+        - wget -P /tmp/downloads/containerd https://raw.githubusercontent.com/containerd/containerd/main/containerd.service
+        - mkdir -p /usr/local/lib/systemd/system
+        - cp /tmp/downloads/containerd/containerd.service /usr/local/lib/systemd/system/containerd.service
+        - systemctl daemon-reload
+        - systemctl enable --now containerd
+        - mkdir -p /etc/containerd
+        - containerd config default > /etc/containerd/config.toml
+        - rm -rf /tmp/downloads/containerd
 
-    - name: Add vagrant user to docker group
-      user:
-        name: vagrant
-        group: docker
+    - name: Install runc
+      command: "{{ item }}"
+      with_items:
+        - wget -P /tmp/downloads/runc https://github.com/opencontainers/runc/releases/download/v{{ runc_version }}/runc.{{ arch }}
+        - install -m 755 /tmp/downloads/runc/runc.{{ arch }} /usr/local/sbin/runc
+        - rm -rf /tmp/downloads/runc
 
+    - name: Install cni plugins
+      command: "{{ item }}"
+      with_items:
+        - bash /vagrant/scripts/install-cni.sh
+
+    - name: restart and enable service containerd
+      ansible.builtin.service:
+        name: containerd
+        state: started
+        enabled: yes
+
+    # This section removes and disables swap
+    # -----------------------------------------------------------------------------
     - name: Remove swapfile from /etc/fstab
       mount:
         name: "{{ item }}"
@@ -56,6 +119,8 @@
       command: swapoff -a
       when: ansible_swaptotal_mb > 0
 
+    # This section does the kubernetes installation and configuration
+    # -----------------------------------------------------------------------------
     - name: Add an apt signing key for Kubernetes
       apt_key:
         url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
@@ -74,14 +139,15 @@
         update_cache: yes
       vars:
         packages:
-          - kubelet
-          - kubeadm
-          - kubectl
+          - kubelet={{ kubernetes_version }}
+          - kubeadm={{ kubernetes_version }}
+          - kubectl={{ kubernetes_version }}
 
     - name: Configure node ip
       lineinfile:
         path: /etc/default/kubelet
         line: KUBELET_EXTRA_ARGS=--node-ip={{ node_ip }}
+        create: yes
 
     - name: Restart kubelet
       service:
@@ -90,7 +156,7 @@
         state: restarted
 
     - name: Copy the join command to server location
-      copy: src=join-command dest=/tmp/join-command.sh mode=0777
+      copy: src=/vagrant/.temp/join-command dest=/tmp/join-command.sh mode=0777
 
     - name: Join the node to cluster
       command: sh /tmp/join-command.sh
