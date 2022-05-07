@@ -1,5 +1,6 @@
 **/.terraform/*
 /**/.temp/*
+/**/.vagrant/*
 /**/terraform.tfstate.backup
 /**/terraform.tfstate
 /.temp/*
