@@ -11,3 +11,4 @@
 /**/kube_config
 /**/*.info
 /setup-03/00-create-multi-node-kubernetes-cluster/builds/
+/setup-03/00-create-multi-node-kubernetes-cluster/packer_templates/ubuntu/packer_cache/
