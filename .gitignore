@@ -10,3 +10,4 @@
 /**/*.tfplan
 /**/kube_config
 /**/*.info
+/setup-03/00-create-multi-node-kubernetes-cluster/builds/
