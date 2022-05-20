@@ -30,3 +30,4 @@ kubectl describe nodes
 2. https://kubernetes.io/blog/2020/12/08/kubernetes-1-20-release-announcement/#dockershim-deprecation
 3. https://kubernetes.io/blog/2020/12/02/dont-panic-kubernetes-and-docker/
 4. https://kubernetes.io/blog/2022/02/17/dockershim-faq/
+5. https://www.digitalocean.com/community/tutorials/how-to-create-a-kubernetes-cluster-using-kubeadm-on-ubuntu-20-04
