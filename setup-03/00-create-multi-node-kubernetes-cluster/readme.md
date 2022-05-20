@@ -1,12 +1,24 @@
 # Setup a kubernetes cluster with vagrant and ansible
 
-Taken over from the blog (1), updated to Ubuntu focal and modified so that an execution from a windows host can be done.
+---
+**NOTE**
 
-Needed adaptations for the deprecation of Dockershim (2) & (3) & (4) in Kubernetes
-1.24.0 are also covered.
-## Setup the cluster
+Different parts of this setup in this folder comes from different sources and are slightly modified and combined in a 
+different way. So I want to say thanks for there work. As best a possible I try to link where I took parts from. 
 
-Switch to the folder for the ubuntu base and build the box
+1. Vagrant Kubernetes Setup
+   - Taken over from the blog (1) and the following adaptations are done: 
+     - updated to Ubuntu focal
+     - modified so that an execution from a windows host can be done.
+     - added adaptations for the deprecation of Dockershim (2) & (3) & (4) in Kubernetes 1.24.0
+2. Packer Box Build
+   - Taken over from the bento project (6) and reduced to the virtualbox part.
+
+---
+
+## Setup of the kubernetes cluster
+
+Switch to the folder for the ubuntu base box and build the box for virtualbox
 ```shell
 cd packer_templates\ubuntu
 packer build -only=virtualbox-iso ubuntu-20.04-amd64.json
