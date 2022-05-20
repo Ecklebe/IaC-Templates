@@ -96,7 +96,7 @@
     - name: Install cni plugins
       command: "{{ item }}"
       with_items:
-        - bash /vagrant/scripts/install-cni.sh
+        - bash /vagrant/scripts/install-cni.sh {{ cni_version }} {{ arch }} {{ os }}
 
     - name: restart and enable service containerd
       ansible.builtin.service:

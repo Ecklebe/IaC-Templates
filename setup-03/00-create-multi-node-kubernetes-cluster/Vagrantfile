@@ -23,6 +23,7 @@ Vagrant.configure("2") do |config|
                 os: "linux",
                 containerd_version: "1.6.4",
                 runc_version: "1.1.1",
+                cni_version: "1.1.1"
             }
         end
     end
@@ -42,6 +43,7 @@ Vagrant.configure("2") do |config|
                     os: "linux",
                     containerd_version: "1.6.4",
                     runc_version: "1.1.1",
+                    cni_version: "1.1.1"
                 }
             end
         end
