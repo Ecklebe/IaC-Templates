@@ -172,6 +172,9 @@
     - name: Copy join command to local file
       local_action: copy content="{{ join_command.stdout_lines[0] }}" dest="/vagrant/.temp/join-command"
 
+    - name: Copy kube config to the host to connect from there
+      local_action: copy src="/home/vagrant/.kube/config" dest="/vagrant/.temp/config"
+
   handlers:
     - name: docker status
       service: name=docker state=started
