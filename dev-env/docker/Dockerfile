@@ -10,5 +10,6 @@ RUN apt-get update \
     && /setup/05_install_kubectl.sh \
     && /setup/06_install_network_tools.sh \
     && /setup/07_install_helm.sh \
+    && /setup/08_install_git.sh \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
