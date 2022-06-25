@@ -14,7 +14,7 @@ services:
       # https://hub.docker.com/_/docker
       - /var/run/docker.sock:/var/run/docker.sock
       - ${WORKSPACE}:/workspace
-      - ${USERHOME}:/root:ro
+      - ${USERHOME}:/root
     working_dir: /workspace
     user: root
     networks:
