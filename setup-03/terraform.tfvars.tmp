@@ -1,26 +1,34 @@
-# 1 Backend variables
-domain                 = "localhost"
+# Define the domain where you will add the services to. The domain "localhost" can not be used in combination with
+# authelia authentication as localhost is not a valid domain type and so sessions / cookies can not be stored here (1)(2).
+# As workaround for the local development we choose here: "cluster.local" and set this also to the hosts file of the OS.
+# (1) https://github.com/authelia/authelia/issues/1550
+# (2) https://stackoverflow.com/questions/1134290/cookies-on-localhost-with-explicit-domain/32210291#32210291
+domain = "cluster.local"
+
 kubernetes_config_path = "../../kube_config"
 
 # 3 Ingress variables
 ingress_gateway_chart_name    = "traefik"
 ingress_gateway_chart_repo    = "https://helm.traefik.io/traefik"
-ingress_gateway_chart_version = "10.14.2"
+ingress_gateway_chart_version = "10.19.4"
 traefik_namespace             = "kube-system"
 traefik_admin_username        = "traefik-admin"
 traefik_admin_password        = "traefik~2022"
 
 grafana_username     = "admin"
 grafana_password     = "grafana~2022"
-monitoring_namespace = "default"
+metrics_namespace = "metrics"
+
+# If this value gets changed the traefik config needs also an update in the section tracing for jaeger
+tracing_namespace = "tracing"
 
 ca_tls_subject = {
-  common_name  = "localhost"
+  common_name  = "cluster.local"
   organization = "Test Environment for IaC"
 }
 
 signed_tls_subject = {
-  common_name  = "localhost"
+  common_name  = "cluster.local"
   organization = "Test Environment for IaC"
 }
 
