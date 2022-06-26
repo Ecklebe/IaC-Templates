@@ -6,7 +6,6 @@
 /.temp/*
 /**/.terraform.lock.hcl
 /**/terraform.tfvars
-/**/plugins.txt
 /**/*.tfplan
 /**/kube_config
 /**/*.info
