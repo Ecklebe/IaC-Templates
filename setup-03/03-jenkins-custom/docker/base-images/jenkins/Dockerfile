@@ -11,4 +11,10 @@ RUN echo "deb [arch=$(dpkg --print-architecture) \
 RUN apt-get update && apt-get install -y docker-ce-cli
 USER jenkins
 COPY --chown=jenkins:jenkins plugins.txt /usr/share/jenkins/ref/plugins.txt
-RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt
+RUN jenkins-plugin-cli --verbose -f /usr/share/jenkins/ref/plugins.txt
+
+#COPY jenkins.yaml /usr/share/jenkins/ref/
+#ENV CASC_JENKINS_CONFIG /usr/share/jenkins/ref/jenkins.yaml
+
+#COPY logging.properties /usr/share/jenkins/ref
+#ENV JAVA_OPTS "-Djenkins.install.runSetupWizard=false"
