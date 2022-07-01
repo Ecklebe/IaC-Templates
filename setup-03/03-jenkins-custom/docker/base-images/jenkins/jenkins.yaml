@@ -11,32 +11,12 @@ jenkins:
   disableRememberMe: false
   labelAtoms:
     - name: "built-in"
+    - name: "controller"
+  labelString: "controller"
   markupFormatter: "plainText"
-  mode: NORMAL
+  mode: EXCLUSIVE
   myViewsTabBar: "standard"
-  nodeProperties:
-    - envVars:
-        env:
-          - key: "MAVEN_OPTS"
-    - envVars:
-        env:
-          - key: "MAVEN_OPTS"
-    - envVars:
-        env:
-          - key: "MAVEN_OPTS"
-    - envVars:
-        env:
-          - key: "MAVEN_OPTS"
-    - envVars:
-        env:
-          - key: "MAVEN_OPTS"
-    - envVars:
-        env:
-          - key: "MAVEN_OPTS"
-    - envVars:
-        env:
-          - key: "MAVEN_OPTS"
-  numExecutors: 2
+  numExecutors: 0
   primaryView:
     all:
       name: "all"
@@ -54,16 +34,10 @@ jenkins:
           name: "admin"
           password: "admin"
           properties:
-            - "apiToken"
-            - favoriting:
-                autofavoriteEnabled: true
-            - "mailer"
-            - "favorite"
-            - "myView"
             - preferredProvider:
                 providerId: "default"
-            - "slack"
-            - "timezone"
+            - mailer:
+                emailAddress: "admin@example.com"
   slaveAgentPort: 50000
   updateCenter:
     sites:
@@ -159,6 +133,7 @@ unclassified:
         whiteB: "#D3D7CF"
         yellow: "#C4A000"
         yellowB: "#C4A000"
+    globalColorMapName: "xterm"
   artifactoryBuilder:
     jfrogPipelinesServer:
       bypassProxy: false
@@ -206,6 +181,7 @@ unclassified:
       $PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS:
 
       Check console output at $BUILD_URL to view the results.
+    defaultContentType: "text/plain"
     defaultSubject: "$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!"
     defaultTriggerIds:
       - "hudson.plugins.emailext.plugins.trigger.FailureTrigger"
@@ -242,7 +218,7 @@ unclassified:
   locale:
     ignoreAcceptLanguage: false
   location:
-    adminAddress: "Adresse nicht konfiguriert <nobody@nowhere>"
+    adminAddress: "admin@example.com"
     url: "http://127.0.0.1:8080/"
   logParser:
     legacyFormatting: false
