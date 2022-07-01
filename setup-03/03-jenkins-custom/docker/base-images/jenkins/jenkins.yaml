@@ -33,6 +33,9 @@ jenkins:
     - envVars:
         env:
           - key: "MAVEN_OPTS"
+    - envVars:
+        env:
+          - key: "MAVEN_OPTS"
   numExecutors: 2
   primaryView:
     all:
