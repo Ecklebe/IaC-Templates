@@ -52,6 +52,7 @@ jenkins:
       users:
         - id: "admin"
           name: "admin"
+          password: "admin"
           properties:
             - "apiToken"
             - favoriting:

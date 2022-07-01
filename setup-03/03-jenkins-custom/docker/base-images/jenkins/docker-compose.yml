@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        - parent_image="jenkins/jenkins:2.319.3-jdk11"
+        - parent_image=${PARENT_IMAGE}
     ports:
       - 8080:8080
     networks:
