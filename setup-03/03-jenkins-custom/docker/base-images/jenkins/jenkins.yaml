@@ -70,15 +70,6 @@ jenkins:
     standard:
       excludeClientIPFromCrumb: false
   disableRememberMe: false
-  disabledAdministrativeMonitors:
-    - "jenkins.security.csrf.CSRFAdministrativeMonitor"
-    - "jenkins.monitor.JavaVersionRecommendationAdminMonitor"
-    - "hudson.model.UpdateCenter$CoreUpdateMonitor"
-    - "jenkins.security.UpdateSiteWarningsMonitor"
-    - "jenkins.security.QueueItemAuthenticatorMonitor"
-    - "hudson.PluginManager$PluginDeprecationMonitor"
-    - "jenkins.security.ResourceDomainRecommendation"
-    - "hudson.diagnosis.ReverseProxySetupMonitor"
   labelAtoms:
     - name: "built-in"
     - name: "master"
@@ -115,7 +106,6 @@ jenkins:
             - favoriting:
                 autofavoriteEnabled: true
             - "favorite"
-            - "myView"
             - "slack"
             - "timezone"
             - preferredProvider:
@@ -130,7 +120,6 @@ jenkins:
             - favoriting:
                 autofavoriteEnabled: true
             - "favorite"
-            - "myView"
             - "slack"
             - "timezone"
             - preferredProvider:
