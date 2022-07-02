@@ -1,22 +1,100 @@
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - usernamePassword:
+              description: "This is only the ID used on Jenkins, where behind different users\
+            \ can be used."
+              id: "skeleton-user"
+              password: "admin"
+              scope: GLOBAL
+              username: "admin"
+              usernameSecret: true
 jenkins:
   agentProtocols:
     - "JNLP4-connect"
     - "Ping"
   authorizationStrategy:
-    loggedInUsersCanDoAnything:
-      allowAnonymousRead: false
+    projectMatrix:
+      permissions:
+        - "Agent/Build:jenkins-admins"
+        - "Agent/Build:jenkins-slaves"
+        - "Agent/Configure:jenkins-admins"
+        - "Agent/Configure:jenkins-slaves"
+        - "Agent/Connect:jenkins-admins"
+        - "Agent/Connect:jenkins-slaves"
+        - "Agent/Create:jenkins-admins"
+        - "Agent/Create:jenkins-slaves"
+        - "Agent/Delete:jenkins-admins"
+        - "Agent/Delete:jenkins-slaves"
+        - "Agent/Disconnect:jenkins-admins"
+        - "Artifactory/Promote:jenkins-admins"
+        - "Artifactory/Release:jenkins-admins"
+        - "Build Failure Analyzer/RemoveCause:jenkins-admins"
+        - "Build Failure Analyzer/UpdateCauses:jenkins-admins"
+        - "Build Failure Analyzer/ViewCauses:jenkins-admins"
+        - "Credentials/Create:jenkins-admins"
+        - "Credentials/Delete:jenkins-admins"
+        - "Credentials/ManageDomains:jenkins-admins"
+        - "Credentials/Update:jenkins-admins"
+        - "Credentials/View:jenkins-admins"
+        - "Job/Build:jenkins-admins"
+        - "Job/Cancel:jenkins-admins"
+        - "Job/Configure:jenkins-admins"
+        - "Job/Create:jenkins-admins"
+        - "Job/Delete:jenkins-admins"
+        - "Job/Discover:jenkins-admins"
+        - "Job/Move:jenkins-admins"
+        - "Job/Read:jenkins-admins"
+        - "Job/Read:jenkins-viewers"
+        - "Job/Workspace:jenkins-admins"
+        - "Manage ownership/Jobs:jenkins-admins"
+        - "Manage ownership/Nodes:jenkins-admins"
+        - "Metrics/HealthCheck:jenkins-admins"
+        - "Metrics/ThreadDump:jenkins-admins"
+        - "Metrics/View:jenkins-admins"
+        - "Overall/Administer:jenkins-admins"
+        - "Overall/Administer:skeleton-admin"
+        - "Overall/Read:jenkins-admins"
+        - "Overall/Read:jenkins-viewers"
+        - "Run/Delete:jenkins-admins"
+        - "Run/Replay:jenkins-admins"
+        - "Run/Update:jenkins-admins"
+        - "SCM/Tag:jenkins-admins"
+        - "View/Configure:jenkins-admins"
+        - "View/Create:jenkins-admins"
+        - "View/Delete:jenkins-admins"
+        - "View/Read:jenkins-admins"
+        - "View/Read:jenkins-viewers"
   crumbIssuer:
     standard:
       excludeClientIPFromCrumb: false
   disableRememberMe: false
+  disabledAdministrativeMonitors:
+    - "jenkins.security.csrf.CSRFAdministrativeMonitor"
+    - "jenkins.monitor.JavaVersionRecommendationAdminMonitor"
+    - "hudson.model.UpdateCenter$CoreUpdateMonitor"
+    - "jenkins.security.UpdateSiteWarningsMonitor"
+    - "jenkins.security.QueueItemAuthenticatorMonitor"
+    - "hudson.PluginManager$PluginDeprecationMonitor"
+    - "jenkins.security.ResourceDomainRecommendation"
+    - "hudson.diagnosis.ReverseProxySetupMonitor"
   labelAtoms:
     - name: "built-in"
-    - name: "controller"
-  labelString: "controller"
-  markupFormatter: "plainText"
+    - name: "master"
+  labelString: "master"
+  log:
+    recorders:
+      - loggers:
+          - level: "OFF"
+            name: "org.jenkinsci.plugins.gwt.GenericWebHookRequestReceiver"
+        name: "genericwebhook"
+  markupFormatter:
+    rawHtml:
+      disableSyntaxHighlighting: false
   mode: EXCLUSIVE
   myViewsTabBar: "standard"
-  numExecutors: 0
+  numExecutors: 15
   primaryView:
     all:
       name: "all"
@@ -30,8 +108,8 @@ jenkins:
       allowsSignup: false
       enableCaptcha: false
       users:
-        - id: "admin"
-          name: "admin"
+        - id: "skeleton-admin"
+          name: "skeleton-admin"
           password: "admin"
           properties:
             - preferredProvider:
@@ -47,17 +125,75 @@ jenkins:
     - all:
         name: "all"
   viewsTabBar: "standard"
+support:
+  automatedBundleConfiguration:
+    componentIds:
+      - "AgentsConfigFile"
+      - "ConfigFileComponent"
+      - "OtherConfigFilesComponent"
+      - "AboutBrowser"
+      - "AboutJenkins"
+      - "AboutUser"
+      - "AdministrativeMonitors"
+      - "AgentProtocols"
+      - "BuildQueue"
+      - "CustomLogs"
+      - "DumpExportTable"
+      - "EnvironmentVariables"
+      - "FileDescriptorLimit"
+      - "GCLogs"
+      - "HeapUsageHistogram"
+      - "ItemsContent"
+      - "AgentsJVMProcessSystemMetricsContents"
+      - "MasterJVMProcessSystemMetricsContents"
+      - "JenkinsLogs"
+      - "LoadStats"
+      - "LoggerManager"
+      - "Metrics"
+      - "NetworkInterfaces"
+      - "NodeMonitors"
+      - "OtherLogs"
+      - "ReverseProxy"
+      - "RootCAs"
+      - "RunningBuilds"
+      - "SlaveCommandStatistics"
+      - "SlaveLaunchLogs"
+      - "SlaveLogs"
+      - "AgentsSystemConfiguration"
+      - "MasterSystemConfiguration"
+      - "SystemProperties"
+      - "TaskLogs"
+      - "ThreadDumps"
+      - "UpdateCenter"
+      - "UserCount"
+      - "SlowRequestComponent"
+      - "HighLoadComponent"
+      - "DeadlockRequestComponent"
+      - "PipelineTimings"
+      - "PipelineThreadDump"
+    enabled: true
+    period: 1
 globalCredentialsConfiguration:
   configuration:
     providerFilter: "none"
     typeFilter: "none"
 security:
+  anonymizeSupportBundle:
+    enabled: false
   apiToken:
     creationOfLegacyTokenEnabled: false
     tokenGenerationOnCreationEnabled: false
     usageStatisticsEnabled: true
+  copyartifact:
+    mode: PRODUCTION
+  envInject:
+    enableLoadingFromMaster: false
+    enablePermissions: false
+    hideInjectedVars: false
+  globalJobDslSecurityConfiguration:
+    useScriptSecurity: true
   sSHD:
-    port: -1
+    port: 50000
 unclassified:
   ansiColorBuildWrapper:
     colorMaps:
@@ -158,12 +294,12 @@ unclassified:
   buildFailureAnalyzer:
     doNotAnalyzeAbortedJob: false
     gerritTriggerEnabled: true
-    globalEnabled: true
+    globalEnabled: false
     graphsEnabled: false
     knowledgeBase: "localFile"
     maxLogSize: 0
     metricSquashingEnabled: false
-    noCausesEnabled: true
+    noCausesEnabled: false
     noCausesMessage: "No problems were identified. If you know why this problem occurred,\
       \ please add a suitable Cause for it."
     nrOfScanThreads: 3
@@ -172,6 +308,17 @@ unclassified:
     testResultParsingEnabled: false
   buildStepOperation:
     enabled: false
+  claimConfig:
+    blockAutoRefreshWhileClaiming: false
+    propagateToFollowingBuildsByDefault: false
+    sendEmails: false
+    sendEmailsForStickyFailures: false
+    sortUsersByFullName: false
+    stickyByDefault: true
+  defaultFolderConfiguration:
+    healthMetrics:
+      - worstChildHealthMetric:
+          recursive: true
   email-ext:
     adminRequiredForTemplateTesting: false
     allowUnregisteredEnabled: false
@@ -211,12 +358,23 @@ unclassified:
     hideCredentials: false
     showEntireCommitSummaryInChanges: false
     useExistingAccountWithSameEmail: false
+  globalDefaultFlowDurabilityLevel:
+    durabilityHint: PERFORMANCE_OPTIMIZED
+  groovy:
+    installations:
+      - name: "Groovy 2.5.0"
+        properties:
+          - installSource:
+              installers:
+                - groovyInstaller:
+                    id: "2.5.0"
   ivyBuildTrigger:
     extendedVersionMatching: false
   junitTestResultStorage:
     storage: "file"
   locale:
-    ignoreAcceptLanguage: false
+    ignoreAcceptLanguage: true
+    systemLocale: "EN"
   location:
     adminAddress: "admin@example.com"
     url: "http://127.0.0.1:8080/"
@@ -228,10 +386,32 @@ unclassified:
     useTls: false
   mavenModuleSet:
     localRepository: "default"
+  naginatorPublisher:
+    regexpTimeoutMs: 30000
+  pipeline-model-docker:
+    dockerLabel: "docker"
   pollSCM:
     pollingThreadCount: 10
   prismConfiguration:
     theme: PRISM
+  simple-theme-plugin:
+    elements:
+      - cssUrl:
+          url: "http://127.0.0.1:8080/userContent/jenkins.css"
+      - cssText:
+          text: |-
+            .ui-resizable-handle {
+             position: absolute;
+             bottom: 0;
+             background-color: #1f7313;
+             width: 100%;
+             height: 10px;
+             cursor: row-resize;
+             opacity: 0.1;
+            }
+            .ui-resizable-handle:hover {
+             opacity: 0.6;
+            }
   slackNotifier:
     botUser: false
     sendAsText: false
@@ -247,9 +427,11 @@ unclassified:
   subversionSCM:
     workspaceFormat: 8
   timestamper:
-    allPipelines: false
+    allPipelines: true
     elapsedTimeFormat: "'<b>'HH:mm:ss.S'</b> '"
     systemTimeFormat: "'<b>'HH:mm:ss'</b> '"
+  upstream:
+    globalUpstreamFilterStrategy: UseOldest
   warningsParsers:
     consoleLogScanningPermitted: false
   whitelist:
@@ -259,6 +441,14 @@ tool:
     installations:
       - home: "git"
         name: "Default"
+  groovy:
+    installations:
+      - name: "Groovy 2.5.0"
+        properties:
+          - installSource:
+              installers:
+                - groovyInstaller:
+                    id: "2.5.0"
   mavenGlobalConfig:
     globalSettingsProvider: "standard"
     settingsProvider: "standard"
