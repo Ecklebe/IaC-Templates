@@ -3,10 +3,10 @@ credentials:
     domainCredentials:
       - credentials:
           - usernamePassword:
-              description: "This is only the ID used on Jenkins, where behind different users\
-            \ can be used."
+              description: "This is only the ID used on Jenkins, where behind different\
+            \ users can be used."
               id: "skeleton-user"
-              password: "admin"
+              password: "{AQAAABAAAAAQB+NdLjv/OzoECkN0m15sLpSceXhjnS7Hu+xyfHeDdgw=}"
               scope: GLOBAL
               username: "admin"
               usernameSecret: true
@@ -108,10 +108,31 @@ jenkins:
       allowsSignup: false
       enableCaptcha: false
       users:
+        - id: "admin"
+          name: "admin"
+          properties:
+            - "apiToken"
+            - favoriting:
+                autofavoriteEnabled: true
+            - "favorite"
+            - "myView"
+            - "slack"
+            - "timezone"
+            - preferredProvider:
+                providerId: "default"
+            - mailer:
+                emailAddress: "admin@example.com"
         - id: "skeleton-admin"
           name: "skeleton-admin"
           password: "admin"
           properties:
+            - "apiToken"
+            - favoriting:
+                autofavoriteEnabled: true
+            - "favorite"
+            - "myView"
+            - "slack"
+            - "timezone"
             - preferredProvider:
                 providerId: "default"
             - mailer:
@@ -192,6 +213,21 @@ security:
     hideInjectedVars: false
   globalJobDslSecurityConfiguration:
     useScriptSecurity: true
+  kerberosSso:
+    accountName: "Service account"
+    allowBasic: true
+    allowDelegation: false
+    allowLocalhost: true
+    allowUnsecureBasic: true
+    anonymousAccess: false
+    enabled: false
+    krb5Location: "/etc/krb5.conf"
+    loginClientModule: "spnego-client"
+    loginLocation: "/etc/login.conf"
+    loginServerModule: "spnego-server"
+    promptNtlm: false
+    redirect: "yourdomain.com"
+    redirectEnabled: false
   sSHD:
     port: 50000
 unclassified:
