@@ -1,6 +1,48 @@
 version: '3'
 services:
+  traefik:
+    # The official v2 Traefik docker image
+    image: "traefik:v2.7"
+    container_name: "traefik"
+    # Enables the web UI and tells Traefik to listen to docker
+    command:
+      #- "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=webgateway"
+      - "--providers.docker.endpoint=unix:///var/run/docker.sock"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      #- "--entrypoints.websecure.http.tls=true"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.traefik.service=api@internal"
+      #- "traefik.http.routers.traefik.middlewares=admin"
+      #- "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.entrypoints=web"
+      #- "traefik.http.middlewares.admin.basicauth.users=admin:admin"
+      #- "traefik.http.routers.traefik.tls=true"
+
+      # global redirect to https
+      #- "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
+      #- "traefik.http.routers.http-catchall.entrypoints=web"
+      #- "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
+
+      # middleware redirect
+      #- "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    restart: unless-stopped
+    networks:
+      - webgateway
   jenkins:
+    container_name: "jenkins"
     build:
       context: .
       dockerfile: Dockerfile
@@ -9,8 +51,18 @@ services:
     ports:
       - 8080:8080
     networks:
-      - jenkins
+      - webgateway
+    environment:
+      # https://github.com/jenkinsci/docker/blob/master/README.md#configuring-reverse-proxy
+      - JENKINS_OPTS="--prefix=/jenkins"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jenkins.rule=Host(`${DOMAIN}`) && PathPrefix(`/jenkins/`)"
+      #- "traefik.http.routers.jenkins.entrypoints=websecure"
+      - "traefik.http.routers.jenkins.entrypoints=web"
+      - "traefik.docker.network=${COMPOSE_PROJECT_NAME}_webgateway"
+      #- "traefik.http.routers.jenkins.tls=true"
 
 networks:
-  jenkins:
+  webgateway:
     driver: bridge

@@ -367,7 +367,7 @@ unclassified:
   gitHubConfiguration:
     apiRateLimitChecker: ThrottleForNormalize
   gitHubPluginConfig:
-    hookUrl: "http://127.0.0.1:8080/github-webhook/"
+    hookUrl: "http://cluster.local/jenkins/github-webhook/"
   gitLabConnectionConfig:
     connections:
       - clientBuilderId: "autodetect"
@@ -402,7 +402,7 @@ unclassified:
     systemLocale: "EN"
   location:
     adminAddress: "admin@example.com"
-    url: "http://127.0.0.1:8080/"
+    url: "http://cluster.local/jenkins/"
   logParser:
     legacyFormatting: false
   mailer:
@@ -422,7 +422,7 @@ unclassified:
   simple-theme-plugin:
     elements:
       - cssUrl:
-          url: "http://127.0.0.1:8080/userContent/jenkins.css"
+          url: "http://cluster.local/jenkins/userContent/jenkins.css"
       - cssText:
           text: |-
             .ui-resizable-handle {
@@ -444,7 +444,7 @@ unclassified:
     enabled: false
     globalPipelineFilter: true
     maxEventsBatchSize: 262144
-    metadataHost: "127.0.0.1"
+    metadataHost: "cluster.local/jenkins"
     port: 8088
     rawEventEnabled: true
     retriesOnError: 3
