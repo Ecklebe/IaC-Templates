@@ -62,10 +62,6 @@ variable "jenkins_admin_username" {
   type        = string
   description = "Name of the service acount for the jenkins admin"
 }
-variable "jenkins_plugins" {
-  type        = string
-  description = "Jenkins plugins to install"
-}
 
 
 resource "kubernetes_namespace" "jenkins" {
@@ -192,15 +188,10 @@ resource "kubernetes_cluster_role_binding" "jenkins" {
   }
 }
 
-resource "local_file" "jenkins-plugins" {
-  content  = var.jenkins_plugins
-  filename = "./docker/base-images/jenkins/plugins.txt"
-}
-
 resource "docker_image" "jenkins" {
   name       = var.jenkins_controller_custom_image_name
   build {
-    path      = "./docker/base-images/jenkins"
+    path      = "../../docker-based-service-templates/jenkins"
     tag       = [join("", [var.jenkins_controller_custom_image_name, ":", var.jenkins_controller_custom_image_version])]
     build_arg = {
       parent_image : join("", [
@@ -213,7 +204,6 @@ resource "docker_image" "jenkins" {
       "docker push ", var.jenkins_controller_custom_image_name, ":", var.jenkins_controller_custom_image_version
     ])
   }
-  depends_on = [local_file.jenkins-plugins]
 }
 
 data "template_file" "jenkins_values" {

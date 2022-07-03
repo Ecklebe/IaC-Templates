@@ -12,7 +12,7 @@ directory.
 
 After applying terraform the Jenkins should be reachable with the following link:
 
-- http://jenkins.localhost
+- http://jenkins.cluster.local
 
 For the login you can use the following two ways:
 

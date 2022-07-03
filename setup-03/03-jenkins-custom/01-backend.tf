@@ -16,5 +16,8 @@ terraform {
 }
 
 provider "docker" {
-  host = "npipe:////.//pipe//docker_engine"
+  #for windows
+  #host = "npipe:////.//pipe//docker_engine"
+
+  host = "unix:///var/run/docker.sock"
 }
